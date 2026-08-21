@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Meridian Carriers — Global Freight Forwarding</title>
+<meta name="description" content="Fan-made rebuild study: dotted-globe hero with scroll-driven atmospheric descent." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Martian+Mono:wdth,wght@100..112,300..600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+
+<!-- ────────────────────────────────  LOADER  ──────────────────────────────── -->
+<div class="loader" id="loader" aria-hidden="true">
+
+  <!-- phase 1: network manifest -->
+  <div class="loader__stage" id="loaderStage">
+    <div class="loader__head">
+      <div class="loader__mark" id="loaderMark">MERIDIAN<span>CARRIERS</span></div>
+      <div class="loader__pct">
+        <span id="loaderPct">00</span>
+        <i class="loader__spin" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <div class="loader__body">
+      <div class="loader__col loader__col--l">
+        <div class="loader__track" id="loaderCountries"></div>
+      </div>
+      <div class="loader__col loader__col--r">
+        <div class="loader__track" id="loaderServices"></div>
+      </div>
+    </div>
+
+    <canvas class="loader__map" id="loaderMap"></canvas>
+  </div>
+
+  <!-- phase 2: concentric rings around the centred wordmark -->
+  <div class="loader__rings" id="loaderRings" aria-hidden="true">
+    <i style="--d: 53.3vh"></i>
+    <i style="--d: 80vh"></i>
+    <i style="--d: 106.7vh"></i>
+    <i style="--d: 133.3vh"></i>
+  </div>
+
+  <!-- phase 3: leading hairlines for the circular wipe -->
+  <div class="loader__wipe" id="loaderWipe" aria-hidden="true">
+    <i></i><i></i>
+  </div>
+</div>
+
+<!-- ────────────────────────────────  HERO  ──────────────────────────────── -->
+<section class="hero" id="hero">
+  <div class="hero__sticky" id="heroSticky">
+
+    <!-- WebGL globe + starfield -->
+    <canvas class="hero__canvas" id="globeCanvas"></canvas>
+
+    <!-- Atmospheric DOM bloom layers (composited over the WebGL limb) -->
+    <div class="hero__bloom hero__bloom--warm" id="bloomWarm" aria-hidden="true"></div>
+    <div class="hero__bloom hero__bloom--cool" id="bloomCool" aria-hidden="true"></div>
+
+    <!-- Projected country labels -->
+    <div class="hero__labels" id="globeLabels" aria-hidden="true"></div>
+
+    <!-- Copy-side vignette so type stays legible over the globe -->
+    <div class="hero__scrim" aria-hidden="true"></div>
+
+    <!-- Film grain -->
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- ── top utility rail ── -->
+    <div class="rail" data-intro="rail">
+      <div class="rail__ticker">
+        <div class="ticker" id="ticker">
+          <a class="ticker__line" id="tickerLine" href="#"></a>
+        </div>
+      </div>
+      <div class="rail__utils">
+        <a class="rail__link" href="#">Carbon Calculator</a>
+        <span class="rail__sep">/</span>
+        <a class="rail__link" href="#">Live Tracking Portal</a>
+      </div>
+    </div>
+
+    <!-- ── navigation ── -->
+    <header class="nav" data-intro="nav">
+      <a class="nav__logo" href="#" aria-label="Meridian Carriers home">
+        <span>MERIDIAN</span><em>CARRIERS</em>
+      </a>
+
+      <nav class="nav__menu" aria-label="Primary">
+        <a class="nav__link" href="#"><span class="roll"><i>About</i><i aria-hidden="true">About</i></span></a>
+        <a class="nav__link" href="#"><span class="roll"><i>Services</i><i aria-hidden="true">Services</i></span></a>
+        <a class="nav__link" href="#"><span class="roll"><i>Industries</i><i aria-hidden="true">Industries</i></span></a>
+        <a class="nav__link" href="#"><span class="roll"><i>Insights</i><i aria-hidden="true">Insights</i></span></a>
+        <a class="nav__link" href="#"><span class="roll"><i>Careers</i><i aria-hidden="true">Careers</i></span></a>
+        <a class="nav__link" href="#"><span class="roll"><i>Contact</i><i aria-hidden="true">Contact</i></span></a>
+      </nav>
+
+      <a class="btn btn--solid nav__cta" href="#">
+        <span class="btn__label roll"><i>Work with us</i><i aria-hidden="true">Work with us</i></span>
+      </a>
+
+      <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+        <i></i><i></i>
+      </button>
+    </header>
+
+    <!-- ── hero copy ── -->
+    <div class="hero__copy" id="heroCopy">
+      <p class="hero__eyebrow"><span class="mask"><span class="mask__i">One operator</span></span></p>
+
+      <h1 class="hero__title">
+        <span class="mask"><span class="mask__i">Owning</span></span>
+        <span class="mask"><span class="mask__i">every mile</span></span>
+        <span class="mask"><span class="mask__i">in between</span></span>
+      </h1>
+
+      <p class="hero__lede">
+        <span class="mask"><span class="mask__i">Ocean, air and overland freight with</span></span>
+        <span class="mask"><span class="mask__i">customs cleared end to end — one team,</span></span>
+        <span class="mask"><span class="mask__i">accountable the whole way.</span></span>
+      </p>
+
+      <div class="hero__actions">
+        <a class="btn btn--solid" href="#"><span class="btn__label roll"><i>Talk with us</i><i aria-hidden="true">Talk with us</i></span></a>
+        <a class="btn btn--ghost" href="#"><span class="btn__label roll"><i>Our services</i><i aria-hidden="true">Our services</i></span></a>
+      </div>
+    </div>
+
+    <!-- ── live route readout (mock telemetry) ── -->
+    <aside class="readout" id="readout" data-intro="readout" aria-hidden="true">
+      <div class="readout__head">
+        <i class="readout__pulse"></i><span>ACTIVE LANE</span>
+      </div>
+      <div class="readout__body">
+        <div class="readout__lane" id="readoutLane">SIN → RTM</div>
+        <div class="readout__rows">
+          <div><span>MODE</span><b id="readoutMode">OCEAN FCL</b></div>
+          <div><span>ETA</span><b id="readoutEta">18D 04H</b></div>
+          <div><span>TEU</span><b id="readoutTeu">1,240</b></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── scroll cue ── -->
+    <div class="scrollcue" data-intro="cue" aria-hidden="true">
+      <div class="scrollcue__pill"><i></i></div>
+    </div>
+
+    <!-- ── descent overlay: blue atmosphere flood → white ── -->
+    <div class="descent" id="descent" aria-hidden="true">
+      <div class="descent__sky" id="descentSky"></div>
+      <div class="descent__white" id="descentWhite"></div>
+    </div>
+
+    <!-- drag affordance -->
+    <div class="draghint" id="dragHint" aria-hidden="true">DRAG TO ORBIT</div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────  NEXT SECTION (landing pad)  ──────────────────────────────── -->
+<section class="after">
+  <div class="after__inner">
+    <p class="after__kicker">From countless journeys, clarity emerges</p>
+    <h2 class="after__title"><span>We move freight.</span><em>We own the outcome.</em></h2>
+    <div class="after__stats">
+      <div><b>2,540</b><span>Shipments per month</span></div>
+      <div><b>68</b><span>Port pairs served</span></div>
+      <div><b>99.2%</b><span>On-time milestone rate</span></div>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
