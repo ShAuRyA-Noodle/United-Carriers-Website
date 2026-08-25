@@ -111,6 +111,7 @@ const BODY_FRAG = /* glsl */ `
   ${GLSL_UTIL}
   uniform vec3  uSun;
   uniform vec3  uNight;
+  uniform vec3  uOcean;
   uniform vec3  uWarm;
   uniform vec3  uCool;
   uniform float uDive;
@@ -133,7 +134,15 @@ const BODY_FRAG = /* glsl */ `
     float scatter = fresWide * pow(1.0 - pow(lambert, 1.8), 2.0) * 0.38;
     scatter *= smoothstep(-0.85, 0.7, -n.y * 0.7 + n.x * 0.42);
 
+    // A flat night colour makes the sphere read as a cut-out disc. This adds a
+    // smooth body gradient — a wide terminator wash plus a gentle vertical
+    // falloff — so the globe has volume before the rim and scatter go on top.
+    float wash = pow(lambert, 0.42);                       // broad day-to-night ramp
+    float vertical = smoothstep(-1.0, 1.0, -n.y) * 0.5 + 0.5;
+
     vec3 col = uNight;
+    col += uOcean * wash * 0.085;
+    col += uOcean * vertical * 0.030;
     col += uCool * scatter * (0.38 + uDive * 2.4);
     col += uWarm * crescent * (3.2 + uDive * 1.1);
 
@@ -296,7 +305,11 @@ const DOT_FRAG = /* glsl */ `
 
     float lum = 0.72 + vLambert * 0.55 + vRim * 0.10;
     lum *= 0.84 + 0.32 * vCoast;
-    lum *= mix(1.0, 0.72, vRim);
+
+    // toward the silhouette the rows compress into far more dots per pixel;
+    // without this they stack into a hard bright ring around the globe
+    lum *= mix(1.0, 0.46, vRim);
+    lum *= mix(1.0, 0.55, smoothstep(0.55, 0.06, vFacing));
 
     float warmMix = clamp(pow(vLambert, 1.15) * 1.35, 0.0, 1.0);
     vec3 col = mix(uBase, uWarm, warmMix) * (0.92 + vLambert * 0.5);
@@ -387,6 +400,7 @@ export class Globe {
     this.velY = 0;
     this.velX = 0;
     this.dragVel = new THREE.Vector2();
+    this.visible = true;
     this.autoSpeed = this.reducedMotion ? 0 : 0.028;
     this.dragging = false;
     this.pointer = { x: 0, y: 0 };
@@ -428,7 +442,7 @@ export class Globe {
     // extra headroom stops the atmosphere gradient banding before bloom
     const rt = new THREE.WebGLRenderTarget(1, 1, {
       type: THREE.HalfFloatType,
-      samples: 4,
+      samples: 2,
       colorSpace: THREE.LinearSRGBColorSpace,
     });
     this.composer = new EffectComposer(this.renderer, rt);
@@ -471,7 +485,8 @@ export class Globe {
       fragmentShader: BODY_FRAG,
       uniforms: {
         uSun:   { value: SUN_DIR.clone() },
-        uNight: { value: new THREE.Color('#050710') },
+        uNight: { value: new THREE.Color('#04060d') },
+        uOcean: { value: new THREE.Color('#2c4f9e') },
         uWarm:  { value: warm.clone() },
         uCool:  { value: cool.clone() },
         uDive:  { value: 0 },
@@ -808,14 +823,17 @@ export class Globe {
 
     const down = (e) => {
       if (e.button !== undefined && e.button !== 0) return;
-      this.dragging = true;
+      // touch gestures stay ambiguous until they show a direction, so the globe
+      // waits rather than stealing what might turn out to be a scroll
+      this.pending = e.pointerType === 'touch';
+      this.dragging = !this.pending;
       moved = 0;
       lastX = e.clientX;
       lastY = e.clientY;
       this.dragVel.set(0, 0);
       this.velY = 0;
       this.velX = 0;
-      c.classList.add('is-dragging');
+      if (this.dragging) c.classList.add('is-dragging');
       try { c.setPointerCapture(e.pointerId); } catch { /* not capturable */ }
     };
 
@@ -824,6 +842,15 @@ export class Globe {
       this.pointer.x = (e.clientX / this.size.w) * 2 - 1;
       this.pointer.y = (e.clientY / this.size.h) * 2 - 1;
 
+      if (this.pending) {
+        const adx = Math.abs(e.clientX - lastX);
+        const ady = Math.abs(e.clientY - lastY);
+        if (adx < 8 && ady < 8) return;          // not enough to judge yet
+        if (ady > adx) { this.pending = false; return; }   // vertical: let it scroll
+        this.pending = false;
+        this.dragging = true;
+        c.classList.add('is-dragging');
+      }
       if (!this.dragging) return;
 
       const dx = e.clientX - lastX;
@@ -844,6 +871,7 @@ export class Globe {
     };
 
     const up = (e) => {
+      this.pending = false;
       if (!this.dragging) return;
       this.dragging = false;
       c.classList.remove('is-dragging');
@@ -871,7 +899,12 @@ export class Globe {
   resize() {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    /* At DPR 2 the hero ran a 3200x1800 buffer through bloom every frame and
+       sat at ~40fps. The globe is a soft, bloomed image — the extra pixels buy
+       almost nothing, so the backing store is capped well below device DPR and
+       capped harder on phones. */
+    const cap = w < 760 ? 1.4 : 1.6;
+    const dpr = Math.min(window.devicePixelRatio || 1, cap);
 
     this.size = { w, h, dpr };
 
@@ -939,8 +972,18 @@ export class Globe {
     this.dive = THREE.MathUtils.clamp(p, 0, 1);
   }
 
+  /**
+   * The page is ~13,000px tall; without this the full WebGL scene, bloom and
+   * all, keeps rendering while the reader is down in the footer.
+   */
+  setVisible(v) {
+    this.visible = v;
+  }
+
   /* ── frame ── */
   update() {
+    if (this.visible === false) return;
+
     const now = performance.now() / 1000;
     const dt = Math.min(now - this.tPrev, 0.05);
     this.tPrev = now;

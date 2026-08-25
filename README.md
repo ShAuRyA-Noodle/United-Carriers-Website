@@ -67,7 +67,23 @@ stops the descent timeline from capturing mid-intro start values.
   longitude run and drawn at −360 / 0 / +360.
 - **Label roll.** The hover swap used a pseudo-element inside the element being
   translated, so it moved along with its parent and the label landed off-centre.
-  Replaced with two stacked lines in a one-line clipping track.
+  Replaced with two stacked lines in a one-line clipping track — and note that
+  nothing above `.roll` may be transformed on hover, since the clip is the only
+  thing hiding the second line. An earlier pass left the old wrapper transforms
+  in place; both fired at once and the two lines collided.
+- **Point-sprite flicker.** Dot size was being modulated by a per-dot sine.
+  On sprites already sitting near one pixel that pushes them in and out of the
+  rasteriser between frames, which reads as flicker. Nothing animates
+  `gl_PointSize` now; sub-pixel sizes are clamped at 1px and expressed as alpha.
+- **Depth fighting.** The point clouds depth-tested against the body sphere with
+  a 0.01/220 near/far ratio, leaving almost no precision at globe distance. They
+  now cull the far hemisphere analytically in the shader (`dot(n, v) <= 0`),
+  which is exact for a sphere, so they render with the depth test off entirely.
+- **Lane popping.** The trade lanes were ~1px tubes. Sub-pixel geometry falls
+  between rasteriser samples and blinks as the globe turns; they are now wide
+  enough to land on real pixels, with MSAA resolving the edges.
+- **Banding.** The atmosphere and body gradients are dithered by 1/255 and the
+  composer runs a multisampled half-float target.
 
 ## Substitutions
 
@@ -81,6 +97,19 @@ Fonts, with system Helvetica Neue for body copy.
   and smooth scrolling, and snaps the intro to its end state.
 - Film grain is generated to a data URI at runtime, so there are no binary assets.
 - DPR is clamped to 2.
+
+## A note on measuring performance here
+
+Headless Chromium defaults to **SwiftShader**, a CPU rasteriser. Profiling
+against it showed 0.5–3fps and sent me chasing a performance problem that does
+not exist — on the machine's actual GPU the same build holds 59.9fps through the
+loader, hero idle, and mid-descent. Launch with
+`--use-angle=metal --enable-gpu` before trusting any frame-rate number.
+
+The same caveat sinks pixel-diffing the canvas: without `preserveDrawingBuffer`
+the drawing buffer's contents are undefined after presentation, so consecutive
+screenshots differ even for a completely static scene. A static-sphere control
+case confirmed it — verify rendering by looking at it, not by hashing it.
 
 ## Stack
 

@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Martian+Mono:wdth,wght@100..112,300..600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/src/styles.css" />
+<link rel="stylesheet" href="/src/sections.css" />
 </head>
 <body>
 
@@ -151,10 +152,10 @@
       <div class="scrollcue__pill"><i></i></div>
     </div>
 
-    <!-- ── descent overlay: blue atmosphere flood → white ── -->
+    <!-- ── descent: atmospheric panel rides up over the globe ── -->
     <div class="descent" id="descent" aria-hidden="true">
+      <div class="descent__horizon" id="descentHorizon"></div>
       <div class="descent__sky" id="descentSky"></div>
-      <div class="descent__white" id="descentWhite"></div>
     </div>
 
     <!-- drag affordance -->
@@ -162,18 +163,351 @@
   </div>
 </section>
 
-<!-- ────────────────────────────────  NEXT SECTION (landing pad)  ──────────────────────────────── -->
-<section class="after">
-  <div class="after__inner">
-    <p class="after__kicker">From countless journeys, clarity emerges</p>
-    <h2 class="after__title"><span>We move freight.</span><em>We own the outcome.</em></h2>
-    <div class="after__stats">
-      <div><b>2,540</b><span>Shipments per month</span></div>
-      <div><b>68</b><span>Port pairs served</span></div>
-      <div><b>99.2%</b><span>On-time milestone rate</span></div>
+<!-- ══════════════════════════════  INTRO  ══════════════════════════════ -->
+<section class="sec sec--intro" id="intro">
+  <div class="wrap">
+    <figure class="intro__plate" data-reveal>
+      <canvas class="plate__cv" data-plate="interchange" width="640" height="400"></canvas>
+      <figcaption>Inland corridor — road / rail interchange</figcaption>
+    </figure>
+
+    <div class="intro__body" data-reveal>
+      <p>Every service sits under one roof and one accountable team, so your
+      supply chain moves the way the business actually needs it to: predictably,
+      visibly, and without excuses.</p>
+      <p>No finger-pointing between vendors. No delay lost in a handoff. One
+      team, answerable from origin to destination.</p>
+      <a class="btn btn--ink" href="#"><span class="btn__label roll"><i>Learn more about us</i><i aria-hidden="true">Learn more about us</i></span></a>
+    </div>
+
+    <h2 class="intro__head" data-reveal>
+      <span class="mask"><span class="mask__i muted">We move freight.</span></span>
+      <span class="mask"><span class="mask__i">We own the outcome.</span></span>
+    </h2>
+
+    <p class="intro__kicker" data-reveal>From countless journeys, clarity emerges</p>
+
+    <div class="stats" data-reveal>
+      <div class="stat"><b data-count="2500" data-suffix="+">0</b><span>Shipments per month</span></div>
+      <div class="stat"><b data-count="98.2" data-suffix="%" data-decimals="1">0</b><span>On-time milestone rate</span></div>
+      <div class="stat"><b data-count="8" data-suffix="+">0</b><span>Countries with own offices</span></div>
     </div>
   </div>
 </section>
+
+<!-- ══════════════════════════════  SERVICES  ══════════════════════════════ -->
+<section class="sec sec--services" id="services">
+  <div class="wrap">
+    <header class="sec__head" data-reveal>
+      <p class="eyebrow">Services</p>
+      <h2 class="sec__title">Everything your freight needs.<em>Under one group.</em></h2>
+    </header>
+  </div>
+
+  <div class="svc">
+    <div class="svc__rail" id="svcRail">
+      <article class="svc__card" data-svc="air">
+        <div class="svc__media"><canvas class="plate__cv" data-plate="air" width="720" height="540"></canvas></div>
+        <div class="svc__meta">
+          <span class="svc__no">01</span>
+          <h3>Air Freight</h3>
+          <p>Consolidated and charter uplift for cargo that cannot wait — booked
+          against live capacity, cleared before it lands.</p>
+          <ul><li>Express consolidation</li><li>Charter and part-charter</li><li>Temperature-controlled</li><li>Dangerous goods</li></ul>
+        </div>
+      </article>
+
+      <article class="svc__card" data-svc="ocean">
+        <div class="svc__media"><canvas class="plate__cv" data-plate="ocean" width="720" height="540"></canvas></div>
+        <div class="svc__meta">
+          <span class="svc__no">02</span>
+          <h3>Ocean Freight</h3>
+          <p>FCL, LCL and breakbulk across the main east–west trades, with space
+          protected on the loops your volume actually runs on.</p>
+          <ul><li>FCL and LCL</li><li>Breakbulk and RoRo</li><li>Buyer consolidation</li><li>Port-to-door</li></ul>
+        </div>
+      </article>
+
+      <article class="svc__card" data-svc="customs">
+        <div class="svc__media"><canvas class="plate__cv" data-plate="customs" width="720" height="540"></canvas></div>
+        <div class="svc__meta">
+          <span class="svc__no">03</span>
+          <h3>Customs Brokerage</h3>
+          <p>Licensed brokers filing in-house, so classification, valuation and
+          duty sit with the same team that moved the box.</p>
+          <ul><li>Import and export entry</li><li>Tariff classification</li><li>Duty and concession advice</li><li>Audit support</li></ul>
+        </div>
+      </article>
+
+      <article class="svc__card" data-svc="warehouse">
+        <div class="svc__media"><canvas class="plate__cv" data-plate="warehouse" width="720" height="540"></canvas></div>
+        <div class="svc__meta">
+          <span class="svc__no">04</span>
+          <h3>Warehousing &amp; 3PL</h3>
+          <p>Bonded and general storage with pick, pack and inventory visibility
+          that reconciles against the shipment record, not a separate system.</p>
+          <ul><li>Bonded storage</li><li>Pick and pack</li><li>Inventory sync</li><li>Returns handling</li></ul>
+        </div>
+      </article>
+
+      <article class="svc__card" data-svc="project">
+        <div class="svc__media"><canvas class="plate__cv" data-plate="project" width="720" height="540"></canvas></div>
+        <div class="svc__meta">
+          <span class="svc__no">05</span>
+          <h3>Project Cargo</h3>
+          <p>Out-of-gauge and heavy-lift moves surveyed, routed and permitted as
+          one engineered scope from factory floor to foundation.</p>
+          <ul><li>Route surveys</li><li>Heavy lift and OOG</li><li>Permits and escorts</li><li>Site delivery</li></ul>
+        </div>
+      </article>
+
+      <article class="svc__card" data-svc="land">
+        <div class="svc__media"><canvas class="plate__cv" data-plate="land" width="720" height="540"></canvas></div>
+        <div class="svc__meta">
+          <span class="svc__no">06</span>
+          <h3>Domestic &amp; Linehaul Transport</h3>
+          <p>Wharf cartage, linehaul and final mile run on our own booking rails,
+          so the last leg reports like every leg before it.</p>
+          <ul><li>Wharf cartage</li><li>Interstate linehaul</li><li>Final mile</li><li>Sidelifter and tilt tray</li></ul>
+        </div>
+      </article>
+    </div>
+    <div class="svc__progress"><i id="svcProgress"></i></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════  WHY  ══════════════════════════════ -->
+<section class="sec sec--why" id="why">
+  <div class="wrap">
+    <header class="sec__head sec__head--wide" data-reveal>
+      <p class="eyebrow">Why Meridian</p>
+      <h2 class="sec__title">Logistics that works as hard as you do.</h2>
+    </header>
+
+    <div class="why__grid">
+      <article class="why__item" data-reveal>
+        <span class="why__no">01</span>
+        <h3>One Point of Contact</h3>
+        <p>A named coordinator owns the file end to end. Same person for the
+        booking, the exception and the invoice query.</p>
+      </article>
+      <article class="why__item" data-reveal>
+        <span class="why__no">02</span>
+        <h3>Full Supply Chain Visibility</h3>
+        <p>Milestone events land against the shipment as they happen, so the
+        status you read is the status that exists.</p>
+      </article>
+      <article class="why__item" data-reveal>
+        <span class="why__no">03</span>
+        <h3>Compliance You Can Trust</h3>
+        <p>In-house licensed brokers, documented processes and a clean audit
+        trail on every entry we lodge.</p>
+      </article>
+      <article class="why__item" data-reveal>
+        <span class="why__no">04</span>
+        <h3>Competitive, Transparent Pricing</h3>
+        <p>Rates quoted line by line. What was quoted is what gets invoiced,
+        and any variation is explained before it is charged.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════  TESTIMONIALS  ══════════════════════════════ -->
+<section class="sec sec--testi" id="testimonials">
+  <div class="wrap">
+    <header class="sec__head" data-reveal>
+      <p class="eyebrow">Clients</p>
+      <h2 class="sec__title">Trusted by businesses across APAC</h2>
+    </header>
+
+    <div class="testi" id="testi">
+      <div class="testi__track" id="testiTrack">
+        <figure class="testi__card">
+          <blockquote>They took over a lane three other forwarders had already
+          given up on, and had it running clean inside a month.</blockquote>
+          <figcaption><b>Operations Director</b><span>Industrial equipment importer</span></figcaption>
+        </figure>
+        <figure class="testi__card">
+          <blockquote>The difference is the handoffs — there aren't any. One team
+          answers whether it's a booking, a customs query or an invoice.</blockquote>
+          <figcaption><b>Supply Chain Manager</b><span>FMCG distributor</span></figcaption>
+        </figure>
+        <figure class="testi__card">
+          <blockquote>We stopped chasing status updates. The milestones just
+          arrive, and they're accurate.</blockquote>
+          <figcaption><b>Head of Procurement</b><span>Renewables developer</span></figcaption>
+        </figure>
+        <figure class="testi__card">
+          <blockquote>Their brokers caught a classification error that had been
+          quietly costing us duty for two years.</blockquote>
+          <figcaption><b>Finance Controller</b><span>Automotive parts group</span></figcaption>
+        </figure>
+      </div>
+      <div class="testi__nav">
+        <button class="tnav" id="testiPrev" aria-label="Previous testimonial">&#8592;</button>
+        <button class="tnav" id="testiNext" aria-label="Next testimonial">&#8594;</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════  PARTNERS  ══════════════════════════════ -->
+<section class="sec sec--partners" id="partners">
+  <div class="wrap">
+    <header class="sec__head" data-reveal>
+      <p class="eyebrow">Network</p>
+      <h2 class="sec__title">Carriers, terminals and agents we work through</h2>
+    </header>
+  </div>
+  <div class="marquee" id="marqueeA"><div class="marquee__track"></div></div>
+  <div class="marquee marquee--rev" id="marqueeB"><div class="marquee__track"></div></div>
+</section>
+
+<!-- ══════════════════════════════  INSIGHTS  ══════════════════════════════ -->
+<section class="sec sec--ins" id="insights">
+  <div class="wrap">
+    <header class="sec__head sec__head--row" data-reveal>
+      <div>
+        <p class="eyebrow">Insights</p>
+        <h2 class="sec__title">What&rsquo;s moving in your industry</h2>
+      </div>
+      <a class="btn btn--ghost-ink" href="#"><span class="btn__label roll"><i>All insights</i><i aria-hidden="true">All insights</i></span></a>
+    </header>
+
+    <div class="ins__grid">
+      <a class="ins__card" href="#" data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="containers" width="640" height="420"></canvas></div>
+        <p class="ins__tag">Case study</p>
+        <h3>Reduced import delays and storage cost across 700+ containers</h3>
+        <span class="ins__more">Read</span>
+      </a>
+      <a class="ins__card" href="#" data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="bunker" width="640" height="420"></canvas></div>
+        <p class="ins__tag">Market</p>
+        <h3>Fleet-wide fuel efficiency agreement signals focus on shipping performance</h3>
+        <span class="ins__more">Read</span>
+      </a>
+      <a class="ins__card" href="#" data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="truck" width="640" height="420"></canvas></div>
+        <p class="ins__tag">Case study</p>
+        <h3>Cost-optimised, speed-to-market import program for a new truck launch</h3>
+        <span class="ins__more">Read</span>
+      </a>
+      <a class="ins__card" href="#" data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="battery" width="640" height="420"></canvas></div>
+        <p class="ins__tag">Project cargo</p>
+        <h3>Grid-scale battery project delivered for renewable energy infrastructure</h3>
+        <span class="ins__more">Read</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════  FAQ  ══════════════════════════════ -->
+<section class="sec sec--faq" id="faq">
+  <div class="wrap">
+    <header class="sec__head sec__head--row" data-reveal>
+      <div><p class="eyebrow">F.A.Q</p><h2 class="sec__title">Questions we get asked</h2></div>
+    </header>
+
+    <div class="faq" id="faq-list">
+      <details class="faq__row" open>
+        <summary><span>What does Meridian Carriers do?</span><i></i></summary>
+        <div class="faq__body"><p>We are a freight forwarder and licensed customs
+        broker. We arrange air, ocean and overland movement, clear the goods, and
+        hold the warehousing and final-mile legs on the same file.</p></div>
+      </details>
+      <details class="faq__row">
+        <summary><span>What industries do you specialise in?</span><i></i></summary>
+        <div class="faq__body"><p>Industrial equipment, automotive parts, FMCG,
+        renewables and project infrastructure. Those lanes carry the compliance
+        and out-of-gauge work our brokerage and project teams are built around.</p></div>
+      </details>
+      <details class="faq__row">
+        <summary><span>What shipping methods do you offer?</span><i></i></summary>
+        <div class="faq__body"><p>Air consolidation and charter, ocean FCL, LCL,
+        breakbulk and RoRo, plus domestic linehaul, wharf cartage and final mile.</p></div>
+      </details>
+      <details class="faq__row">
+        <summary><span>Do you provide customs clearance services?</span><i></i></summary>
+        <div class="faq__body"><p>Yes — in-house, with licensed brokers. Entry
+        lodgement, classification, valuation, duty concessions and audit support
+        sit with the same team handling the shipment.</p></div>
+      </details>
+      <details class="faq__row">
+        <summary><span>Can you handle oversized or project cargo?</span><i></i></summary>
+        <div class="faq__body"><p>Yes. Out-of-gauge and heavy-lift moves are
+        surveyed, routed and permitted as a single engineered scope, including
+        lift plans and site delivery.</p></div>
+      </details>
+      <details class="faq__row">
+        <summary><span>How do I get a quote?</span><i></i></summary>
+        <div class="faq__body"><p>Send the lane, commodity, volume and target
+        dates. You will get a line-by-line rate rather than a single blended
+        number, so every charge is visible before you commit.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════  CTA  ══════════════════════════════ -->
+<section class="sec sec--cta" id="cta">
+  <canvas class="cta__cv" id="ctaCanvas"></canvas>
+  <div class="wrap">
+    <h2 class="cta__title" data-reveal>Ready to move smarter?</h2>
+    <p class="cta__sub" data-reveal>Tell us the lane. We will tell you exactly what it costs and exactly when it lands.</p>
+    <div class="cta__actions" data-reveal>
+      <a class="btn btn--solid" href="#"><span class="btn__label roll"><i>Talk with us</i><i aria-hidden="true">Talk with us</i></span></a>
+      <a class="btn btn--ghost" href="#"><span class="btn__label roll"><i>Our services</i><i aria-hidden="true">Our services</i></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════  FOOTER  ══════════════════════════════ -->
+<footer class="foot" id="footer">
+  <div class="wrap">
+    <div class="foot__top">
+      <div class="foot__brand">
+        <a class="foot__logo" href="#"><span>MERIDIAN</span><em>CARRIERS</em></a>
+        <p>Freight forwarding, customs brokerage and contract logistics across
+        the Asia&ndash;Pacific.</p>
+        <div class="foot__lanes"><canvas id="footCanvas" width="900" height="180"></canvas></div>
+      </div>
+
+      <nav class="foot__cols" aria-label="Footer">
+        <div class="foot__col">
+          <h4>Services</h4>
+          <a href="#">Air Freight</a><a href="#">Ocean Freight</a>
+          <a href="#">Customs Brokerage</a><a href="#">Warehousing &amp; 3PL</a>
+          <a href="#">Project Cargo</a><a href="#">Domestic Transport</a>
+        </div>
+        <div class="foot__col">
+          <h4>Company</h4>
+          <a href="#">About</a><a href="#">Industries</a><a href="#">Insights</a>
+          <a href="#">Careers</a><a href="#">Contact</a><a href="#">Community</a>
+        </div>
+        <div class="foot__col">
+          <h4>Tools</h4>
+          <a href="#">Live Tracking Portal</a><a href="#">Carbon Calculator</a>
+          <a href="#">Rate Request</a><a href="#">Customs Guides</a>
+        </div>
+        <div class="foot__col">
+          <h4>Offices</h4>
+          <a href="#">Singapore</a><a href="#">Sydney</a><a href="#">Auckland</a>
+          <a href="#">Hong Kong</a><a href="#">Shanghai</a><a href="#">Hamburg</a>
+        </div>
+      </nav>
+    </div>
+
+    <div class="foot__bar">
+      <p>&copy; 2026 Meridian Carriers. Fan-made rebuild study — a fictional company.</p>
+      <div class="foot__legal">
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Trading Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script type="module" src="/src/main.js"></script>
 </body>

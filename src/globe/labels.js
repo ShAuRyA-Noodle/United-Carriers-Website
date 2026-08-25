@@ -75,12 +75,16 @@ export function createLabels(nodes, container, { radius = 1 } = {}) {
         const narrow = size.w < 760;
         const GUARD_TOP = narrow ? 96 : 132;
         const GUARD_SIDE = narrow ? 22 : 34;
+        // the headline column owns the left of the frame; chips fade out before
+        // they can slide underneath it
+        const GUARD_COPY = narrow ? 0 : size.w * 0.70;
         // on phones the copy owns the lower two thirds, so chips stay above it
         const GUARD_BOTTOM = narrow ? size.h * 0.5 : GUARD_SIDE;
         const edgeFade =
           THREE.MathUtils.smoothstep(py, GUARD_TOP, GUARD_TOP + 46) *
           THREE.MathUtils.smoothstep(size.h - py, GUARD_BOTTOM, GUARD_BOTTOM + 44) *
           THREE.MathUtils.smoothstep(px, GUARD_SIDE, GUARD_SIDE + 36) *
+          THREE.MathUtils.smoothstep(px, GUARD_COPY, GUARD_COPY + 70) *
           THREE.MathUtils.smoothstep(size.w - px, narrow ? 26 : 70, narrow ? 62 : 132);
 
         const target = limbFade * local * master * edgeFade;
@@ -94,10 +98,20 @@ export function createLabels(nodes, container, { radius = 1 } = {}) {
         }
         if (item.el.style.visibility === 'hidden') item.el.style.visibility = 'visible';
 
-        item.el.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0)`;
-        item.el.style.opacity = item.shown.toFixed(3);
-        item.el.style.setProperty('--pop', (0.72 + 0.28 * item.pop).toFixed(3));
-        item.el.style.setProperty('--stem', item.pop.toFixed(3));
+        // 25 chips x 4 style writes x 60fps forces a style recalc every frame;
+        // writing only on change drops the vast majority of that
+        const tf = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0)`;
+        if (tf !== item.lastTf) { item.el.style.transform = tf; item.lastTf = tf; }
+
+        const op = item.shown.toFixed(2);
+        if (op !== item.lastOp) { item.el.style.opacity = op; item.lastOp = op; }
+
+        const pop = (0.72 + 0.28 * item.pop).toFixed(2);
+        if (pop !== item.lastPop) {
+          item.el.style.setProperty('--pop', pop);
+          item.el.style.setProperty('--stem', item.pop.toFixed(2));
+          item.lastPop = pop;
+        }
       }
     },
 

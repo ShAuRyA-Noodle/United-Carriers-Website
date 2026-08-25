@@ -31,7 +31,7 @@ export function initScroll(globe) {
   /* ── descent scrub ── */
   const heroCopy = document.querySelector('#heroCopy');
   const sky = document.querySelector('#descentSky');
-  const white = document.querySelector('#descentWhite');
+  const horizon = document.querySelector('#descentHorizon');
   const warm = document.querySelector('#bloomWarm');
   const cool = document.querySelector('#bloomCool');
   const cue = document.querySelector('.scrollcue');
@@ -49,33 +49,32 @@ export function initScroll(globe) {
     },
   });
 
-  // hero furniture clears out early
-  tl.to(heroCopy, { y: -110, opacity: 0, ease: 'none', duration: 0.32 }, 0)
-    .to([cue, drag], { opacity: 0, ease: 'none', duration: 0.14 }, 0)
-    .to(readout, { opacity: 0, y: 16, ease: 'none', duration: 0.18 }, 0.02)
-    .to([rail, nav], { opacity: 0, y: -18, ease: 'none', duration: 0.24 }, 0.04);
+  // hero furniture clears out first
+  tl.to(heroCopy, { y: -140, opacity: 0, ease: 'none', duration: 0.30 }, 0)
+    .to([cue, drag], { opacity: 0, ease: 'none', duration: 0.12 }, 0)
+    .to(readout, { opacity: 0, y: 16, ease: 'none', duration: 0.16 }, 0.02)
+    .to([rail, nav], { opacity: 0, y: -18, ease: 'none', duration: 0.22 }, 0.04);
 
-  // camera descent
-  tl.to(globe, {
-    dive: 1,
-    ease: 'none',
-    duration: 0.92,
-    onUpdate: () => globe.setDive(globe.dive),
-  }, 0.05);
-
-  // DOM bloom swells then blows out as we pass through the limb
-  tl.to(warm, { opacity: 1.35, scale: 1.5, ease: 'none', duration: 0.5 }, 0.05)
-    .to(warm, { opacity: 0, ease: 'none', duration: 0.26 }, 0.64)
-    .to(cool, { opacity: 1.5, scale: 1.9, ease: 'none', duration: 0.62 }, 0.05)
-    .to(cool, { opacity: 0, ease: 'none', duration: 0.18 }, 0.8);
-
-  // atmosphere floods the frame
+  /* The atmospheric panel rides up over the globe. Its black top edge meets the
+     hero's black ground seamlessly, so the transition reads as falling through
+     the atmosphere rather than as an element sliding in. The camera itself does
+     not move — an actual zoom into the sphere looks like a mistake. */
+  /* top:100% parks it below the fold; -100% of its own 220vh height lands the
+     white bottom exactly across the viewport */
   tl.fromTo(sky,
-    { opacity: 0, scale: 1.3 },
-    { opacity: 1, scale: 1, ease: 'none', duration: 0.34 }, 0.62);
+    { yPercent: 0 },
+    { yPercent: -100, ease: 'none', duration: 0.92 }, 0.08);
 
-  // and finally blows out to the white section below
-  tl.to(white, { opacity: 1, ease: 'none', duration: 0.1 }, 0.92);
+  // a horizon line runs just ahead of the panel's leading edge
+  tl.fromTo(horizon,
+    { y: 0, opacity: 0 },
+    { opacity: 0.9, ease: 'none', duration: 0.08 }, 0.08)
+    .to(horizon, { y: () => -window.innerHeight * 1.05, ease: 'none', duration: 0.5 }, 0.08)
+    .to(horizon, { opacity: 0, ease: 'none', duration: 0.14 }, 0.5);
+
+  // the globe's own glow swells slightly, then is simply covered over
+  tl.to(warm, { opacity: 1.15, scale: 1.22, ease: 'none', duration: 0.42 }, 0.04)
+    .to(cool, { opacity: 1.25, scale: 1.3, ease: 'none', duration: 0.5 }, 0.04);
 
   ScrollTrigger.refresh();
 

@@ -8,6 +8,7 @@ import { Globe } from './globe/Globe.js';
 import { playIntro, bindDragHint, q } from './intro.js';
 import { runLoader } from './loader.js';
 import { initScroll } from './scroll.js';
+import { initSections } from './sections.js';
 import { HEADLINES, LANES } from './data/mock.js';
 
 /* ─────────────────────────────  film grain  ───────────────────────────── */
@@ -145,6 +146,7 @@ async function boot() {
   makeGrain();
   startTicker();
   bindBurger();
+  initSections();
 
   const globe = new Globe(q('#globeCanvas'), q('#globeLabels'));
   globe.setIntro(0);
@@ -156,6 +158,22 @@ async function boot() {
     requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);
+
+  // the hero is one screen of a very tall page — park the scene once it leaves
+  const heroSticky = document.querySelector('#heroSticky');
+  if (heroSticky && 'IntersectionObserver' in window) {
+    new IntersectionObserver(
+      ([e]) => globe.setVisible(e.isIntersecting),
+      { rootMargin: '120px 0px' }
+    ).observe(heroSticky);
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) globe.setVisible(false);
+    else if (heroSticky) {
+      const r = heroSticky.getBoundingClientRect();
+      globe.setVisible(r.bottom > -120 && r.top < window.innerHeight + 120);
+    }
+  });
 
   // hold the page still while the intro plays, exactly as the source does —
   // it also keeps the descent timeline from capturing mid-intro start values

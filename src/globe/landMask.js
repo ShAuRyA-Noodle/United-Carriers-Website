@@ -61,7 +61,11 @@ export function getLandMask(url = '/land-110m.json') {
 }
 
 export async function createLandMask(url = '/land-110m.json') {
-  const topo = await fetch(url).then((r) => r.json());
+  // A single-file build inlines the topology on `window`, so the page works
+  // with no network and no same-origin asset to fetch.
+  const topo = (typeof window !== 'undefined' && window.__LAND_TOPO)
+    ? window.__LAND_TOPO
+    : await fetch(url).then((r) => r.json());
   const land = feature(topo, topo.objects.land);
 
   const canvas = document.createElement('canvas');

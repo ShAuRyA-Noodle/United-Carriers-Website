@@ -63,20 +63,18 @@ function pulseRows(host, period = 620) {
 
 /* ─────────────────────────────  dotted world map  ───────────────────────────── */
 
-function drawMap(canvas, mask, t, activeIds) {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const w = canvas.clientWidth;
-  const h = canvas.clientHeight;
-  if (!w || !h) return;
-
-  if (canvas.width !== Math.round(w * dpr)) {
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-  }
-
-  const ctx = canvas.getContext('2d');
+/**
+ * The land field never changes, so it is rasterised once to an offscreen
+ * canvas and blitted thereafter. Rebuilding it per frame meant ~11,500
+ * point-in-land tests plus fillRects every tick, which — stacked on top of the
+ * globe's render loop — dragged the whole loader down to a few frames a second.
+ */
+function buildStaticMap(mask, w, h, dpr) {
+  const off = document.createElement('canvas');
+  off.width = Math.round(w * dpr);
+  off.height = Math.round(h * dpr);
+  const ctx = off.getContext('2d');
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, w, h);
 
   const cols = Math.max(40, Math.round(w / DOT_PITCH));
   const rows = Math.max(20, Math.round(h / DOT_PITCH));
@@ -92,35 +90,61 @@ function drawMap(canvas, mask, t, activeIds) {
       ctx.fillRect(((c + 0.5) / cols) * w - size / 2, y - size / 2, size, size);
     }
   }
+  return off;
+}
 
-  // network offices sit on top as larger stations
-  const project = (lat, lon) => [
-    ((lon + 180) / 360) * w,
-    ((LAT_TOP - lat) / (LAT_TOP - LAT_BOT)) * h,
-  ];
+function makeMapRenderer(canvas, mask) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let w = 0;
+  let h = 0;
+  let statik = null;
+  let ctx = null;
 
-  for (const n of NODES) {
-    const [x, y] = project(n.lat, n.lon);
-    const active = activeIds.has(n.id);
+  return function render(t, activeIds) {
+    const cw = canvas.clientWidth;
+    const ch = canvas.clientHeight;
+    if (!cw || !ch) return;
 
-    if (active) {
-      const pulse = 0.5 + 0.5 * Math.sin(t * 4.4 + n.lat);
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(0, 22, 203, ${0.18 + 0.22 * pulse})`;
-      ctx.arc(x, y, 4.5 + pulse * 3.4, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.fillStyle = '#1a33ff';
-      ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-      ctx.fill();
-    } else {
-      ctx.beginPath();
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.42)';
-      ctx.arc(x, y, 1.9, 0, Math.PI * 2);
-      ctx.fill();
+    if (cw !== w || ch !== h || !statik) {
+      w = cw; h = ch;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx = canvas.getContext('2d');
+      statik = buildStaticMap(mask, w, h, dpr);
     }
-  }
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(statik, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const project = (lat, lon) => [
+      ((lon + 180) / 360) * w,
+      ((LAT_TOP - lat) / (LAT_TOP - LAT_BOT)) * h,
+    ];
+
+    for (const n of NODES) {
+      const [x, y] = project(n.lat, n.lon);
+
+      if (activeIds.has(n.id)) {
+        const pulse = 0.5 + 0.5 * Math.sin(t * 4.4 + n.lat);
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(0, 22, 203, ${0.18 + 0.22 * pulse})`;
+        ctx.arc(x, y, 4.5 + pulse * 3.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.fillStyle = '#1a33ff';
+        ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.42)';
+        ctx.arc(x, y, 1.9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  };
 }
 
 /* ─────────────────────────────  sequence  ───────────────────────────── */
@@ -162,9 +186,15 @@ export async function runLoader(ready) {
 
   getLandMask().then((m) => {
     mask = m;
+    const render = makeMapRenderer(mapEl, mask);
     const t0 = performance.now();
+    let last = 0;
     const tick = () => {
-      drawMap(mapEl, mask, (performance.now() - t0) / 1000, activeIds);
+      const now = performance.now();
+      if (now - last > 33) {          // the markers only pulse; 30fps is plenty
+        last = now;
+        render((now - t0) / 1000, activeIds);
+      }
       mapRaf = requestAnimationFrame(tick);
     };
     tick();
@@ -183,12 +213,20 @@ export async function runLoader(ready) {
   await new Promise((resolve) => {
     let shown = 0;
     let target = 0;
+    let lastTick = performance.now();
     const tick = () => {
-      const elapsed = performance.now() - startedAt;
-      const floor = Math.min(99, (elapsed / MIN_PHASE_1) * 100);
+      const now = performance.now();
+      const elapsed = now - startedAt;
+      // paced target rises past 100 so it can actually reach the cap; the cap
+      // is what holds it at 94 until the real work is done
+      const paced = (elapsed / MIN_PHASE_1) * 100;
       const cap = assetsDone ? 100 : 94;
-      target = Math.min(cap, Math.max(target + 0.42, floor));
-      shown += (target - shown) * 0.14;
+      target = Math.min(cap, Math.max(target, paced));
+      // time-based easing: frame-count easing stalls the counter whenever the
+      // frame rate dips, which is exactly when it must not stall
+      const k = 1 - Math.pow(0.0001, Math.min(0.05, (now - lastTick) / 1000));
+      lastTick = now;
+      shown += (target - shown) * k;
       pctEl.textContent = String(Math.min(100, Math.round(shown))).padStart(2, '0');
       if (assetsDone && elapsed >= MIN_PHASE_1 && shown > 99.2) {
         pctEl.textContent = '100';

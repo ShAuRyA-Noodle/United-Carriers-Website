@@ -274,7 +274,10 @@ a:focus-visible .roll i {
   display: block;
   z-index: 1;
   cursor: grab;
-  touch-action: none;
+  /* `none` made the canvas claim every touch gesture, and since it covers the
+     whole hero that killed scrolling on phones outright. `pan-y` hands vertical
+     scroll back to the browser and leaves horizontal drags for the globe. */
+  touch-action: pan-y;
 }
 .hero__canvas.is-dragging { cursor: grabbing; }
 
@@ -324,20 +327,22 @@ a:focus-visible .roll i {
 
 .grain {
   position: absolute;
-  inset: -50%;
+  inset: -12%;
   z-index: 9;
   pointer-events: none;
   opacity: 0.045;
   background-image: var(--grain-url);
   background-size: 180px 180px;
+  /* transform-only animation on a smaller box: no repaint per step */
   animation: grainShift 0.7s steps(1) infinite;
+  will-change: transform;
 }
 @keyframes grainShift {
   0%   { transform: translate3d(0, 0, 0); }
-  20%  { transform: translate3d(-3%, 2%, 0); }
-  40%  { transform: translate3d(2%, -3%, 0); }
-  60%  { transform: translate3d(-2%, -2%, 0); }
-  80%  { transform: translate3d(3%, 1%, 0); }
+  20%  { transform: translate3d(-2%, 1.5%, 0); }
+  40%  { transform: translate3d(1.5%, -2%, 0); }
+  60%  { transform: translate3d(-1.5%, -1.5%, 0); }
+  80%  { transform: translate3d(2%, 1%, 0); }
   100% { transform: translate3d(0, 0, 0); }
 }
 
@@ -596,10 +601,10 @@ a:focus-visible .roll i {
   bottom: 2.4rem;
   transform: translate(-50%, 0) scale(var(--pop, 1));
   transform-origin: 50% 120%;
-  background: rgba(8, 9, 12, 0.86);
+  /* solid, not blurred: these chips re-project every frame and 25 live
+     backdrop-filters cost more than everything else on the page combined */
+  background: rgba(9, 10, 14, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   border-radius: 2px;
   padding: 0.32rem 0.62rem 0.28rem;
   white-space: nowrap;
@@ -758,35 +763,59 @@ a:focus-visible .roll i {
   margin-right: 0.9rem;
 }
 
-/* ─────────────────────────────  descent overlay  ───────────────────────── */
+/* ─────────────────────────────  descent  ─────────────────────────
+   Not a camera zoom. A tall atmospheric panel rides up over the hero as you
+   scroll, so the frame reads as a descent from orbit: the black top edge
+   covers the globe seamlessly, then deep blue, then sky, then white — which
+   is the ground the next section stands on.
+   ───────────────────────────────────────────────────────────────── */
 
 .descent {
   position: absolute;
   inset: 0;
   z-index: 15;
   pointer-events: none;
+  overflow: hidden;
 }
+
 .descent__sky {
   position: absolute;
-  inset: 0;
-  opacity: 0;
-  will-change: opacity, transform;
-  background:
-    radial-gradient(120% 78% at 50% 128%,
-      #eaf3ff 0%,
-      #8fc0ff 12%,
-      #2f6dff 30%,
-      #1330d0 50%,
-      #0a1170 68%,
-      rgba(4, 6, 40, 0.72) 82%,
-      rgba(0, 0, 0, 0) 96%);
+  left: -2%;
+  right: -2%;
+  /* parked below the fold by position, NOT by a transform: GSAP treats an
+     existing CSS translate as a baseline and adds yPercent on top of it, which
+     silently halved the travel and kept the panel off screen */
+  top: 100%;
+  height: 220vh;
+  will-change: transform;
+  background: linear-gradient(
+    to bottom,
+    #000000   0%,
+    #01020c   9%,
+    #050a3a  19%,
+    #0f1f96  30%,
+    #1441d6  41%,
+    #2472e2  52%,
+    #4fa2ea  62%,
+    #8ec9f2  72%,
+    #c3e2f9  81%,
+    #eaf5fd  89%,
+    #ffffff  95%,
+    #ffffff 100%
+  );
 }
-.descent__white {
+
+/* a thin warm line rides the leading edge, the way a horizon lights up */
+.descent__horizon {
   position: absolute;
-  inset: 0;
-  background: var(--paper);
+  left: 0;
+  right: 0;
+  height: 1px;
+  top: 100%;
   opacity: 0;
-  will-change: opacity;
+  will-change: transform, opacity;
+  background: linear-gradient(90deg, transparent, rgba(255, 138, 51, 0.55), transparent);
+  box-shadow: 0 0 24px 6px rgba(255, 110, 20, 0.18);
 }
 
 /* ─────────────────────────────  next section  ───────────────────────── */
