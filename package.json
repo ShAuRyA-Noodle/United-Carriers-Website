@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 5180"
+    "preview": "vite preview --port 5180",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "assets:sync": "node tools/sync-source-assets.mjs"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +22,9 @@
     "topojson-client": "^3.1.0"
   },
   "devDependencies": {
-    "vite": "^8.2.2"
+    "jsdom": "^29.1.1",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   },
   "private": true
 }
