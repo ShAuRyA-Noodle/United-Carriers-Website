@@ -11,6 +11,25 @@ describe('homepage content contract', () => {
     expect(CONTENT.faq).toHaveLength(8);
   });
 
+  it('stores hero action labels as the prescribed label array', () => {
+    expect(CONTENT.hero.actions).toEqual(['Talk with us', 'Our services']);
+  });
+
+  it('preserves the live-source casing of the closing CTA action', () => {
+    expect(CONTENT.closingCta.action).toBe('work with us');
+  });
+
+  it('keeps the footer legal links limited to the live-source list', () => {
+    expect(CONTENT.footer.legal.links).toEqual([
+      'QHSE',
+      'Privacy Policy',
+      'TERMS & CONDITIONS',
+      'Payment Policy',
+      'Delivery Policy',
+      'Refund & Returns Policy',
+    ]);
+  });
+
   it('preserves audited source copy that has source-specific spelling', () => {
     expect(CONTENT.introduction.kicker).toBe('From countless journeys, clarity emerges');
     expect(CONTENT.reliability[1]).toEqual({

@@ -3,10 +3,7 @@ export const CONTENT = Object.freeze({
     eyebrow: 'One operator',
     heading: ['Every', 'leg of the', 'journey'],
     body: 'Freight forwarding, land transport, and customs brokerage, unified across APAC under one accountable team.',
-    actions: [
-      { label: 'Talk with us' },
-      { label: 'Our services' },
-    ],
+    actions: ['Talk with us', 'Our services'],
   },
   introduction: {
     heading: ['We move freight.', 'We own the outcome.'],
@@ -173,7 +170,7 @@ export const CONTENT = Object.freeze({
   closingCta: {
     heading: 'Ready to move smarter?',
     body: 'We are here to help you grow without hassle. No call centres. No runaround. Just experienced people ready to help.',
-    action: 'Work with us',
+    action: 'work with us',
   },
   footer: {
     tagline: ['One operator.', 'Every leg of the journey.'],
@@ -243,7 +240,7 @@ export const CONTENT = Object.freeze({
     },
     legal: {
       copyright: '© 2026 United Carriers APAC Pty Ltd. Crafted by Bearplus',
-      links: ['QHSE', 'Privacy Policy', 'TERMS & CONDITIONS', 'Payment Policy', 'Delivery Policy', 'Refund & Returns Policy', 'Cookie Settings'],
+      links: ['QHSE', 'Privacy Policy', 'TERMS & CONDITIONS', 'Payment Policy', 'Delivery Policy', 'Refund & Returns Policy'],
       paymentNotice: 'All prices in AUD, inclusive of GST. Powered by Stripe.',
     },
   },
