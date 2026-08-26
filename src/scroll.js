@@ -10,11 +10,12 @@ import Lenis from 'lenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function initScroll(globe) {
+export function initScroll(hero) {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ── smooth scroll, wired into ScrollTrigger's ticker ── */
   let lenis = null;
+  let lenisTicker = null;
   if (!reduced) {
     lenis = new Lenis({
       duration: 1.15,
@@ -24,7 +25,8 @@ export function initScroll(globe) {
     });
 
     lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    lenisTicker = (time) => lenis.raf(time * 1000);
+    gsap.ticker.add(lenisTicker);
     gsap.ticker.lagSmoothing(0);
   }
 
@@ -35,10 +37,9 @@ export function initScroll(globe) {
   const warm = document.querySelector('#bloomWarm');
   const cool = document.querySelector('#bloomCool');
   const cue = document.querySelector('.scrollcue');
-  const readout = document.querySelector('#readout');
-  const drag = document.querySelector('#dragHint');
   const rail = document.querySelector('.rail');
   const nav = document.querySelector('.nav');
+  const state = { p: 0 };
 
   const tl = gsap.timeline({
     scrollTrigger: {
@@ -50,15 +51,18 @@ export function initScroll(globe) {
   });
 
   // hero furniture clears out first
-  tl.to(heroCopy, { y: -140, opacity: 0, ease: 'none', duration: 0.30 }, 0)
-    .to([cue, drag], { opacity: 0, ease: 'none', duration: 0.12 }, 0)
-    .to(readout, { opacity: 0, y: 16, ease: 'none', duration: 0.16 }, 0.02)
+  tl.to(state, {
+    p: 1,
+    ease: 'none',
+    duration: 1,
+    onUpdate: () => hero.setDive(state.p),
+  }, 0)
+    .to(heroCopy, { y: -140, opacity: 0, ease: 'none', duration: 0.30 }, 0)
+    .to(cue, { opacity: 0, ease: 'none', duration: 0.12 }, 0)
     .to([rail, nav], { opacity: 0, y: -18, ease: 'none', duration: 0.22 }, 0.04);
 
-  /* The atmospheric panel rides up over the globe. Its black top edge meets the
-     hero's black ground seamlessly, so the transition reads as falling through
-     the atmosphere rather than as an element sliding in. The camera itself does
-     not move — an actual zoom into the sphere looks like a mistake. */
+  /* The atmospheric panel and globe descent advance together so the horizon
+     crosses the frame as the blue/black atmosphere expands beneath it. */
   /* top:100% parks it below the fold; -100% of its own 220vh height lands the
      white bottom exactly across the viewport */
   tl.fromTo(sky,
@@ -84,7 +88,9 @@ export function initScroll(globe) {
     destroy: () => {
       tl.scrollTrigger?.kill();
       tl.kill();
+      if (lenisTicker) gsap.ticker.remove(lenisTicker);
       lenis?.destroy();
+      hero.setDive(0);
     },
   };
 }

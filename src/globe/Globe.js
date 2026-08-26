@@ -410,11 +410,11 @@ export class Globe {
     this.dive = 0;
     this.introP = 0;
 
-    if (typeof window !== 'undefined') window.__globe = this;
-
     this._initRenderer();
     this._initScene();
     this._bind();
+
+    if (typeof window !== 'undefined') window.__globe = this;
   }
 
   /* ── renderer + composer ── */
@@ -885,11 +885,15 @@ export class Globe {
       if (moved > 14) this.onDragged?.();
     };
 
-    c.addEventListener('pointerdown', down);
-    window.addEventListener('pointermove', move, { passive: true });
-    window.addEventListener('pointerup', up);
-    window.addEventListener('pointercancel', up);
-    window.addEventListener('blur', up);
+    this._onPointerDown = down;
+    this._onPointerMove = move;
+    this._onPointerUp = up;
+
+    c.addEventListener('pointerdown', this._onPointerDown);
+    window.addEventListener('pointermove', this._onPointerMove, { passive: true });
+    window.addEventListener('pointerup', this._onPointerUp);
+    window.addEventListener('pointercancel', this._onPointerUp);
+    window.addEventListener('blur', this._onPointerUp);
 
     this._onResize = () => this.resize();
     window.addEventListener('resize', this._onResize);
@@ -1069,9 +1073,18 @@ export class Globe {
   }
 
   dispose() {
+    if (this._disposed) return;
+    this._disposed = true;
+    this.canvas.removeEventListener('pointerdown', this._onPointerDown);
+    window.removeEventListener('pointermove', this._onPointerMove);
+    window.removeEventListener('pointerup', this._onPointerUp);
+    window.removeEventListener('pointercancel', this._onPointerUp);
+    window.removeEventListener('blur', this._onPointerUp);
     window.removeEventListener('resize', this._onResize);
-    this.arcs.dispose();
-    this.labels.dispose();
-    this.renderer.dispose();
+    this.arcs?.dispose?.();
+    this.labels?.dispose?.();
+    this.composer?.dispose?.();
+    this.renderer?.dispose?.();
+    if (typeof window !== 'undefined' && window.__globe === this) delete window.__globe;
   }
 }

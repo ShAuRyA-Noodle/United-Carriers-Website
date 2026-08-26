@@ -22,7 +22,6 @@ export function playIntro(globe) {
     globe.setIntro(1);
     gsap.set('.mask__i', { y: '0%' });
     gsap.set('[data-intro], .nav__logo, .nav__link, .nav__cta, .hero__actions', { opacity: 1 });
-    q('#dragHint').style.opacity = '1';
     return tl;
   }
 
@@ -55,24 +54,9 @@ export function playIntro(globe) {
     { opacity: 0, y: 18 },
     { opacity: 1, y: 0, duration: 1.1 }, 1.12);
 
-  tl.fromTo('#readout',
-    { opacity: 0, y: 20 },
-    { opacity: 1, y: 0, duration: 1.2 }, 1.35);
-
   tl.to('.scrollcue', { opacity: 1, duration: 1.0 }, 1.6);
-  tl.to('#dragHint', { opacity: 1, duration: 1.0 }, 1.9);
 
   return tl;
-}
-
-/** Hides the drag hint once the user actually orbits the globe. */
-export function bindDragHint(globe) {
-  const hint = q('#dragHint');
-  if (!hint) return;
-  globe.onDragged = () => {
-    gsap.to(hint, { opacity: 0, duration: 0.5, overwrite: true });
-    globe.onDragged = null;
-  };
 }
 
 export { q, qa };

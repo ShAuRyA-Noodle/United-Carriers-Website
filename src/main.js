@@ -1,15 +1,17 @@
 /* ============================================================================
-   main — wiring. Boots the globe, runs the intro, hands scroll over to the
-   descent, and keeps the mock telemetry ticking.
+   main — bootstrap. The hero controller owns the WebGL scene and frame loop;
+   this module only coordinates page-level readiness and section startup.
    ========================================================================= */
 
 import gsap from 'gsap';
-import { Globe } from './globe/Globe.js';
-import { playIntro, bindDragHint, q } from './intro.js';
+import { bindHeroVisibility, initHero } from './components/hero.js';
+import { lifecycle, motionPreferences } from './core/motion.js';
 import { runLoader } from './loader.js';
 import { initScroll } from './scroll.js';
 import { initSections } from './sections.js';
-import { HEADLINES, LANES } from './data/mock.js';
+import { HEADLINES } from './data/mock.js';
+
+const q = (selector, root = document) => root.querySelector(selector);
 
 /* ─────────────────────────────  film grain  ───────────────────────────── */
 /* generated once at runtime so there's no binary asset to ship */
@@ -63,49 +65,6 @@ function startTicker() {
   }, 5200);
 }
 
-/* ─────────────────────────────  lane telemetry  ───────────────────────────── */
-function startTelemetry() {
-  const lane = q('#readoutLane');
-  const mode = q('#readoutMode');
-  const eta = q('#readoutEta');
-  const teu = q('#readoutTeu');
-  if (!lane) return;
-
-  let i = 0;
-
-  /* Settles left to right over a short window. The charset is limited to the
-     glyphs these fields actually use, so a caught mid-frame still reads as
-     plausible telemetry rather than noise. */
-  const scramble = (el, next) => {
-    const pool = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const total = 9;
-    let frame = 0;
-
-    const step = () => {
-      const settled = Math.floor((frame / total) * next.length);
-      let out = '';
-      for (let c = 0; c < next.length; c++) {
-        const ch = next[c];
-        if (c < settled || ch === ' ' || ch === ',' || ch === '\u2192' || ch === '\u2014') out += ch;
-        else out += pool[(Math.random() * pool.length) | 0];
-      }
-      el.textContent = out;
-      if (frame++ < total) requestAnimationFrame(step);
-      else el.textContent = next;
-    };
-    step();
-  };
-
-  setInterval(() => {
-    i = (i + 1) % LANES.length;
-    const d = LANES[i];
-    scramble(lane, d.lane);
-    scramble(mode, d.mode);
-    scramble(eta, d.eta);
-    scramble(teu, d.teu);
-  }, 4200);
-}
-
 /* ─────────────────────────────  mobile menu  ───────────────────────────── */
 function bindBurger() {
   const burger = q('#navBurger');
@@ -148,49 +107,48 @@ async function boot() {
   bindBurger();
   initSections();
 
-  const globe = new Globe(q('#globeCanvas'), q('#globeLabels'));
-  globe.setIntro(0);
-  bindDragHint(globe);
-
-  // render loop starts immediately so the first painted frame is already live
-  const loop = () => {
-    globe.update();
-    requestAnimationFrame(loop);
-  };
-  requestAnimationFrame(loop);
-
-  // the hero is one screen of a very tall page — park the scene once it leaves
-  const heroSticky = document.querySelector('#heroSticky');
-  if (heroSticky && 'IntersectionObserver' in window) {
-    new IntersectionObserver(
-      ([e]) => globe.setVisible(e.isIntersecting),
-      { rootMargin: '120px 0px' }
-    ).observe(heroSticky);
-  }
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) globe.setVisible(false);
-    else if (heroSticky) {
-      const r = heroSticky.getBoundingClientRect();
-      globe.setVisible(r.bottom > -120 && r.top < window.innerHeight + 120);
-    }
+  const { reduced } = motionPreferences();
+  const hero = await initHero({
+    canvas: q('#globeCanvas'),
+    labels: q('#globeLabels'),
+    reducedMotion: reduced,
   });
+  const visibility = bindHeroVisibility(hero, q('#heroSticky'));
+  let scroll;
+  let pageIsClosing = false;
+  const destroy = lifecycle(
+    hero,
+    visibility,
+    { destroy: () => scroll?.destroy() },
+  );
+  window.addEventListener('pagehide', () => {
+    pageIsClosing = true;
+    destroy();
+  }, { once: true });
 
   // hold the page still while the intro plays, exactly as the source does —
   // it also keeps the descent timeline from capturing mid-intro start values
   document.body.classList.add('is-locked');
 
-  await runLoader(globe.dotsReady);
-
-  const intro = playIntro(globe);
-  startTelemetry();
-
-  intro.eventCallback('onComplete', () => {
+  const finishIntro = () => {
+    if (pageIsClosing) return;
     document.body.classList.remove('is-locked');
-    initScroll(globe);
-  });
+    scroll ??= initScroll(hero);
+    document.fonts?.ready.then(() => {
+      if (!pageIsClosing) window.dispatchEvent(new Event('resize'));
+    });
+  };
 
-  // fonts landing late can shift the pinned runway
-  document.fonts?.ready.then(() => window.dispatchEvent(new Event('resize')));
+  try {
+    await runLoader(hero.ready);
+    const intro = hero.playIntro();
+    if (!intro || intro.totalDuration() === 0) finishIntro();
+    else intro.eventCallback('onComplete', finishIntro);
+  } catch {
+    q('#loader')?.classList.add('is-gone');
+    q('#loaderStage')?.style.setProperty('display', 'none');
+    finishIntro();
+  }
 }
 
 boot();
