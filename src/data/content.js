@@ -1,4 +1,13 @@
-export const CONTENT = Object.freeze({
+function deepFreeze(value) {
+  if (value && typeof value === 'object') {
+    Object.values(value).forEach(deepFreeze);
+    Object.freeze(value);
+  }
+
+  return value;
+}
+
+export const CONTENT = deepFreeze({
   hero: {
     eyebrow: 'One operator',
     heading: ['Every', 'leg of the', 'journey'],

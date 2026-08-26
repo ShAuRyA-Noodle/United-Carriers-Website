@@ -1,5 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import { CONTENT } from '../src/data/content.js';
+import reviewedContent from './fixtures/content.snapshot.json';
+
+function expectDeepFreeze(value) {
+  expect(Object.isFrozen(value)).toBe(true);
+
+  if (value && typeof value === 'object') {
+    Object.values(value).forEach(expectDeepFreeze);
+  }
+}
+
+function expectCollectionSchema(records, fields) {
+  expect(Array.isArray(records)).toBe(true);
+
+  records.forEach((record) => {
+    fields.forEach((field) => {
+      expect(record).toHaveProperty(field);
+      expect(record[field]).toEqual(expect.any(String));
+      expect(record[field].trim()).not.toBe('');
+    });
+  });
+}
 
 describe('homepage content contract', () => {
   it('contains the exact primary homepage sequence', () => {
@@ -36,5 +57,29 @@ describe('homepage content contract', () => {
       title: 'Global Network overage',
       body: 'From APAC lanes to international corridors, our partner network spans every major trade route your business relies on.',
     });
+  });
+
+  it('deeply freezes nested records and arrays against mutation', () => {
+    expectDeepFreeze(CONTENT);
+    expect(() => CONTENT.hero.heading.push('mutation')).toThrow(TypeError);
+    expect(() => {
+      CONTENT.services[0].title = 'mutation';
+    }).toThrow(TypeError);
+    expect(() => {
+      CONTENT.footer.company.links[0] = 'mutation';
+    }).toThrow(TypeError);
+  });
+
+  it('keeps collection schemas usable and service ids unique', () => {
+    expectCollectionSchema(CONTENT.services, ['id', 'title', 'body']);
+    expectCollectionSchema(CONTENT.benefits, ['title', 'body']);
+    expectCollectionSchema(CONTENT.testimonials, ['quote', 'name', 'role', 'company']);
+    expectCollectionSchema(CONTENT.insights, ['category', 'date', 'title']);
+    expectCollectionSchema(CONTENT.faq, ['question', 'answer']);
+    expect(new Set(CONTENT.services.map(({ id }) => id)).size).toBe(CONTENT.services.length);
+  });
+
+  it('matches the reviewed source content snapshot', () => {
+    expect(CONTENT).toEqual(reviewedContent);
   });
 });
