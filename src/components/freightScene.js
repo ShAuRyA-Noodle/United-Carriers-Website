@@ -58,9 +58,9 @@ export function setFreightSceneFinalState(root) {
   setOpacity(parts.containerOrange, 0);
   setOpacity(parts.craneTop, 0);
   setOpacity(parts.craneBottom, 0);
-  setOpacity(parts.truckFull, 1);
-  setOpacity(parts.truckCab, 0);
-  setOpacity(parts.truckContainer, 0);
+  setOpacity(parts.truckFull, 0);
+  setOpacity(parts.truckCab, 1);
+  setOpacity(parts.truckContainer, 1);
   parts.wheels.forEach((wheel) => {
     wheel.style.opacity = '1';
     wheel.style.transform = 'rotate(360deg)';
@@ -71,14 +71,14 @@ function prepareDesktopFrame(root) {
   const parts = sceneParts(root);
   root.classList.remove('freight-scene--final');
 
-  gsap.set(parts.craneBase, { autoAlpha: 0, xPercent: -155, yPercent: 12, scale: 0.74 });
-  gsap.set(parts.craneLift, { autoAlpha: 0, xPercent: -155, yPercent: 12, scale: 0.74 });
+  gsap.set(parts.craneBase, { autoAlpha: 1, xPercent: -34, yPercent: 24, scale: 0.78 });
+  gsap.set(parts.craneLift, { autoAlpha: 0, xPercent: 22, yPercent: -14, scale: 0.9 });
   gsap.set(parts.craneTop, { autoAlpha: 0, yPercent: -85 });
   gsap.set(parts.craneBottom, { autoAlpha: 0, yPercent: 85 });
-  gsap.set(parts.containerWhite, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0 });
-  gsap.set(parts.containerBlue, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0 });
-  gsap.set(parts.containerOrange, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0 });
-  gsap.set(parts.truckFull, { autoAlpha: 0, xPercent: -125, scale: 0.9 });
+  gsap.set(parts.containerWhite, { autoAlpha: 0, xPercent: 92, yPercent: -18, rotate: -4 });
+  gsap.set(parts.containerBlue, { autoAlpha: 0, xPercent: -82, yPercent: 28, rotate: 5 });
+  gsap.set(parts.containerOrange, { autoAlpha: 0, xPercent: 68, yPercent: 44, rotate: -6 });
+  gsap.set(parts.truckFull, { autoAlpha: 0, xPercent: -18, scale: 0.95 });
   gsap.set([parts.truckCab, parts.truckContainer, ...parts.wheels], { autoAlpha: 0 });
   gsap.set(parts.truckCab, { xPercent: -38 });
   gsap.set(parts.truckContainer, { xPercent: 44 });
@@ -117,8 +117,11 @@ export function initFreightScene(root, { reducedMotion = false } = {}) {
   });
 
   timeline
-    .to(parts.craneBase, { autoAlpha: 0, duration: 0.01 }, 0.18)
-    .to(parts.craneLift, { autoAlpha: 1, xPercent: 0, yPercent: 0, scale: 1, duration: 0.3 }, 0.22)
+    .to(parts.craneBase, { xPercent: 0, yPercent: 0, scale: 1, duration: 0.24 }, 0)
+    .to(parts.craneLift, { autoAlpha: 1, xPercent: 0, yPercent: 0, scale: 1, duration: 0.2 }, 0.14)
+    .to(parts.containerWhite, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0, duration: 0.2 }, 0.2)
+    .to(parts.containerBlue, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0, duration: 0.2 }, 0.28)
+    .to(parts.containerOrange, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0, duration: 0.2 }, 0.36)
     .to([parts.craneBase, parts.craneLift, parts.containerWhite, parts.containerBlue, parts.containerOrange], {
       xPercent: -18,
       autoAlpha: 0,
@@ -127,7 +130,11 @@ export function initFreightScene(root, { reducedMotion = false } = {}) {
     .to(parts.craneTop, { autoAlpha: 1, yPercent: 0, duration: 0.14 }, 0.48)
     .to(parts.craneBottom, { autoAlpha: 1, yPercent: 0, duration: 0.14 }, 0.51)
     .to([parts.craneTop, parts.craneBottom], { autoAlpha: 0, duration: 0.12 }, 0.66)
-    .to(parts.truckFull, { autoAlpha: 1, xPercent: 0, scale: 1, duration: 0.28 }, 0.66);
+    .to(parts.truckFull, { autoAlpha: 1, xPercent: 0, scale: 1, duration: 0.2 }, 0.64)
+    .to(parts.truckFull, { autoAlpha: 0, duration: 0.1 }, 0.81)
+    .to(parts.truckCab, { autoAlpha: 1, xPercent: 0, duration: 0.15 }, 0.81)
+    .to(parts.truckContainer, { autoAlpha: 1, xPercent: 0, duration: 0.15 }, 0.83)
+    .to(parts.wheels, { autoAlpha: 1, rotate: 0, scale: 1, stagger: 0.025, duration: 0.15 }, 0.85);
 
   let destroyed = false;
   return {
