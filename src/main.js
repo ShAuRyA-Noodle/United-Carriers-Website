@@ -4,14 +4,20 @@
    ========================================================================= */
 
 import gsap from 'gsap';
+import { initBenefits } from './components/benefits.js';
+import { initFreightScene } from './components/freightScene.js';
 import { bindHeroVisibility, initHero } from './components/hero.js';
 import { runLoader } from './components/loader.js';
 import { initNavigation } from './components/navigation.js';
+import { initReliability } from './components/reliability.js';
+import { initServices } from './components/services.js';
+import { initTestimonials } from './components/testimonials.js';
 import { installStudyLinkInterception } from './core/inertLinks.js';
 import { lifecycle, motionPreferences } from './core/motion.js';
 import { initScroll } from './scroll.js';
 import { initSections } from './sections.js';
 import { HEADLINES } from './data/mock.js';
+import './styles/services-reliability.css';
 
 const q = (selector, root = document) => root.querySelector(selector);
 
@@ -76,6 +82,11 @@ async function boot() {
   const removeStudyLinkInterception = installStudyLinkInterception(document);
 
   const { reduced } = motionPreferences();
+  const freightScene = initFreightScene(q('#freightScene'), { reducedMotion: reduced });
+  const services = initServices({ reducedMotion: reduced });
+  const reliability = initReliability({ reducedMotion: reduced });
+  const benefits = initBenefits({ reducedMotion: reduced });
+  const testimonials = initTestimonials({ reducedMotion: reduced });
   const hero = await initHero({
     canvas: q('#globeCanvas'),
     labels: q('#globeLabels'),
@@ -87,6 +98,11 @@ async function boot() {
   const destroy = lifecycle(
     hero,
     visibility,
+    freightScene,
+    services,
+    reliability,
+    benefits,
+    testimonials,
     { destroy: navigation.destroy },
     { destroy: removeStudyLinkInterception },
     { destroy: () => scroll?.destroy() },

@@ -543,8 +543,6 @@ export function initSections() {
   paintPlates();
   initPlateObserver();
   initReveals();
-  initServiceRail();
-  initTestimonials();
   initCtaCanvas();
   initFooterCanvas();
 
