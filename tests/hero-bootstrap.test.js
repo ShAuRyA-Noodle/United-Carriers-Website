@@ -8,7 +8,7 @@ describe('hero bootstrap ownership', () => {
   it('delegates the globe, render loop, and readiness gate to the hero controller', () => {
     expect(main).toContain("import { bindHeroVisibility, initHero } from './components/hero.js';");
     expect(main).toContain('const hero = await initHero(');
-    expect(main).toContain('await runLoader(hero.ready);');
+    expect(main).toContain('await runLoader({ criticalReady: [hero.ready], reducedMotion: reduced });');
     expect(main).not.toContain('new Globe(');
     expect(main).not.toContain('requestAnimationFrame(');
     expect(main).not.toContain('bindDragHint');

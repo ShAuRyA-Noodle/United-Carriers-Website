@@ -1,0 +1,14 @@
+:root {
+  /* Homepage shell measurements; hero-specific tokens remain in styles.css. */
+  --home-page-max: 1440px;
+  --home-content-max: 1240px;
+  --home-gutter: clamp(1.25rem, 4vw, 4rem);
+  --home-section-space: clamp(5rem, 11vw, 12rem);
+  --home-stack-sm: 0.75rem;
+  --home-stack-md: 1.5rem;
+  --home-stack-lg: 3rem;
+  --home-rule: rgba(17, 17, 17, 0.16);
+  --home-muted: rgba(17, 17, 17, 0.62);
+  --home-panel: #f4f4f4;
+  --home-focus: #ff5500;
+}

@@ -5,8 +5,10 @@
 
 import gsap from 'gsap';
 import { bindHeroVisibility, initHero } from './components/hero.js';
+import { runLoader } from './components/loader.js';
+import { initNavigation } from './components/navigation.js';
+import { installStudyLinkInterception } from './core/inertLinks.js';
 import { lifecycle, motionPreferences } from './core/motion.js';
-import { runLoader } from './loader.js';
 import { initScroll } from './scroll.js';
 import { initSections } from './sections.js';
 import { HEADLINES } from './data/mock.js';
@@ -65,47 +67,13 @@ function startTicker() {
   }, 5200);
 }
 
-/* ─────────────────────────────  mobile menu  ───────────────────────────── */
-function bindBurger() {
-  const burger = q('#navBurger');
-  const menu = document.querySelector('.nav__menu');
-  if (!burger || !menu) return;
-
-  burger.addEventListener('click', () => {
-    const open = burger.getAttribute('aria-expanded') === 'true';
-    burger.setAttribute('aria-expanded', String(!open));
-
-    if (!open) {
-      gsap.set(menu, {
-        display: 'flex',
-        position: 'fixed',
-        inset: '0',
-        zIndex: 40,
-        margin: 0,
-        padding: '18vh 8vw',
-        gap: '2.4rem',
-        background: 'rgba(2,3,6,0.94)',
-        backdropFilter: 'blur(10px)',
-      });
-      gsap.fromTo(menu.children,
-        { opacity: 0, y: 26 },
-        { opacity: 1, y: 0, duration: 0.7, stagger: 0.05, ease: 'expo.out' });
-    } else {
-      gsap.to(menu, {
-        opacity: 0,
-        duration: 0.3,
-        onComplete: () => gsap.set(menu, { clearProps: 'all' }),
-      });
-    }
-  });
-}
-
 /* ─────────────────────────────  boot  ───────────────────────────── */
 async function boot() {
   makeGrain();
   startTicker();
-  bindBurger();
   initSections();
+  const navigation = initNavigation();
+  const removeStudyLinkInterception = installStudyLinkInterception(document);
 
   const { reduced } = motionPreferences();
   const hero = await initHero({
@@ -119,16 +87,14 @@ async function boot() {
   const destroy = lifecycle(
     hero,
     visibility,
+    { destroy: navigation.destroy },
+    { destroy: removeStudyLinkInterception },
     { destroy: () => scroll?.destroy() },
   );
   window.addEventListener('pagehide', () => {
     pageIsClosing = true;
     destroy();
   }, { once: true });
-
-  // hold the page still while the intro plays, exactly as the source does —
-  // it also keeps the descent timeline from capturing mid-intro start values
-  document.body.classList.add('is-locked');
 
   const finishIntro = () => {
     if (pageIsClosing) return;
@@ -140,7 +106,10 @@ async function boot() {
   };
 
   try {
-    await runLoader(hero.ready);
+    await runLoader({ criticalReady: [hero.ready], reducedMotion: reduced });
+    // The loader releases its own lock. Re-lock for the globe's opening
+    // timeline, then hand scrolling to Lenis when that timeline completes.
+    document.body.classList.add('is-locked');
     const intro = hero.playIntro();
     if (!intro || intro.totalDuration() === 0) finishIntro();
     else intro.eventCallback('onComplete', finishIntro);

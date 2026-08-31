@@ -10,6 +10,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Martian+Mono:wdth,wght@100..112,300..600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/src/styles.css" />
 <link rel="stylesheet" href="/src/sections.css" />
+<link rel="stylesheet" href="/src/styles/tokens.css" />
+<link rel="stylesheet" href="/src/styles/base.css" />
+<link rel="stylesheet" href="/src/styles/chrome.css" />
+<link rel="stylesheet" href="/src/styles/home.css" />
+<link rel="stylesheet" href="/src/styles/responsive.css" />
 </head>
 <body>
 
@@ -76,32 +81,32 @@
     <div class="rail" data-intro="rail">
       <div class="rail__ticker">
         <div class="ticker" id="ticker">
-          <a class="ticker__line" id="tickerLine" href="#"></a>
+          <a class="ticker__line" id="tickerLine" href="#" data-study-link></a>
         </div>
       </div>
       <div class="rail__utils">
-        <a class="rail__link" href="#">Carbon Calculator</a>
+        <a class="rail__link" href="#" data-study-link>Carbon Calculator</a>
         <span class="rail__sep">|</span>
-        <a class="rail__link" href="#">Live Tracking Portal</a>
+        <a class="rail__link" href="#" data-study-link>Live Tracking Portal</a>
       </div>
     </div>
 
     <!-- ── navigation ── -->
     <header class="nav" data-intro="nav">
-      <a class="nav__logo" href="#" aria-label="United Carriers home">
+      <a class="nav__logo" href="#" data-study-link aria-label="United Carriers home">
         <span>UNITED</span><em>CARRIERS</em>
       </a>
 
       <nav class="nav__menu" aria-label="Primary">
-        <a class="nav__link" href="#"><span class="roll"><i>About</i><i aria-hidden="true">About</i></span></a>
-        <a class="nav__link" href="#"><span class="roll"><i>Services</i><i aria-hidden="true">Services</i></span></a>
-        <a class="nav__link" href="#"><span class="roll"><i>Industries</i><i aria-hidden="true">Industries</i></span></a>
-        <a class="nav__link" href="#"><span class="roll"><i>Insights</i><i aria-hidden="true">Insights</i></span></a>
-        <a class="nav__link" href="#"><span class="roll"><i>Careers</i><i aria-hidden="true">Careers</i></span></a>
-        <a class="nav__link" href="#"><span class="roll"><i>Contact</i><i aria-hidden="true">Contact</i></span></a>
+        <a class="nav__link" href="#" data-study-link><span class="roll"><i>About</i><i aria-hidden="true">About</i></span></a>
+        <a class="nav__link" href="#" data-study-link><span class="roll"><i>Services</i><i aria-hidden="true">Services</i></span></a>
+        <a class="nav__link" href="#" data-study-link><span class="roll"><i>Industries</i><i aria-hidden="true">Industries</i></span></a>
+        <a class="nav__link" href="#" data-study-link><span class="roll"><i>Insights</i><i aria-hidden="true">Insights</i></span></a>
+        <a class="nav__link" href="#" data-study-link><span class="roll"><i>Careers</i><i aria-hidden="true">Careers</i></span></a>
+        <a class="nav__link" href="#" data-study-link><span class="roll"><i>Contact</i><i aria-hidden="true">Contact</i></span></a>
       </nav>
 
-      <a class="btn btn--solid nav__cta" href="#">
+      <a class="btn btn--solid nav__cta" href="#" data-study-link>
         <span class="btn__label roll"><i>Work with us</i><i aria-hidden="true">Work with us</i></span>
       </a>
 
@@ -127,8 +132,8 @@
       </p>
 
       <div class="hero__actions">
-        <a class="btn btn--solid" href="#"><span class="btn__label roll"><i>Talk with us</i><i aria-hidden="true">Talk with us</i></span></a>
-        <a class="btn btn--ghost" href="#"><span class="btn__label roll"><i>Our services</i><i aria-hidden="true">Our services</i></span></a>
+        <a class="btn btn--solid" href="#" data-study-link><span class="btn__label roll"><i>Talk with us</i><i aria-hidden="true">Talk with us</i></span></a>
+        <a class="btn btn--ghost" href="#" data-study-link><span class="btn__label roll"><i>Our services</i><i aria-hidden="true">Our services</i></span></a>
       </div>
     </div>
 
@@ -150,17 +155,14 @@
 <section class="sec sec--intro" id="intro">
   <div class="wrap">
     <figure class="intro__plate" data-reveal>
-      <canvas class="plate__cv" data-plate="interchange" width="640" height="400"></canvas>
+      <canvas class="plate__cv" data-plate="interchange" width="640" height="400" aria-hidden="true"></canvas>
       <figcaption>Inland corridor — road / rail interchange</figcaption>
     </figure>
 
     <div class="intro__body" data-reveal>
-      <p>Every service sits under one roof and one accountable team, so your
-      supply chain moves the way the business actually needs it to: predictably,
-      visibly, and without excuses.</p>
-      <p>No finger-pointing between vendors. No delay lost in a handoff. One
-      team, answerable from origin to destination.</p>
-      <a class="btn btn--ink" href="#"><span class="btn__label roll"><i>Learn more about us</i><i aria-hidden="true">Learn more about us</i></span></a>
+      <p>With every service under one roof and one accountable team, your supply chain moves the way your business demands: predictably, transparently, and without excuses.</p>
+      <p>That means no finger-pointing between vendors. No delays lost in handoffs. Just one team, accountable from origin to destination.</p>
+      <a class="btn btn--ink" href="#" data-study-link><span class="btn__label roll"><i>Learn more about us</i><i aria-hidden="true">Learn more about us</i></span></a>
     </div>
 
     <h2 class="intro__head" data-reveal>
@@ -184,78 +186,83 @@
     <header class="sec__head" data-reveal>
       <p class="eyebrow">Services</p>
       <h2 class="sec__title">Everything your freight needs.<em>Under one group.</em></h2>
+      <p class="home-section__intro">From air freight and sea freight to customs clearance to final delivery, we bring decades of expertise across every freight discipline.<br><br>Our integrated service network means one partner, one point of contact, and total visibility from origin to destination.</p>
     </header>
   </div>
 
   <div class="svc">
     <div class="svc__rail" id="svcRail">
       <article class="svc__card" data-svc="air">
-        <div class="svc__media"><canvas class="plate__cv" data-plate="air" width="720" height="540"></canvas></div>
+        <div class="svc__media"><canvas class="plate__cv" data-plate="air" width="720" height="540" aria-hidden="true"></canvas></div>
         <div class="svc__meta">
           <span class="svc__no">01</span>
-          <h3>Air Freight</h3>
-          <p>Consolidated and charter uplift for cargo that cannot wait — booked
-          against live capacity, cleared before it lands.</p>
-          <ul><li>Express consolidation</li><li>Charter and part-charter</li><li>Temperature-controlled</li><li>Dangerous goods</li></ul>
+          <h3>Air freight</h3>
+          <p>Express, priority, and deferred options across global trade lanes — managed end to end for speed and schedule integrity.</p>
         </div>
       </article>
 
       <article class="svc__card" data-svc="ocean">
-        <div class="svc__media"><canvas class="plate__cv" data-plate="ocean" width="720" height="540"></canvas></div>
+        <div class="svc__media"><canvas class="plate__cv" data-plate="ocean" width="720" height="540" aria-hidden="true"></canvas></div>
         <div class="svc__meta">
           <span class="svc__no">02</span>
           <h3>Ocean Freight</h3>
-          <p>FCL, LCL and breakbulk across the main east–west trades, with space
-          protected on the loops your volume actually runs on.</p>
-          <ul><li>FCL and LCL</li><li>Breakbulk and RoRo</li><li>Buyer consolidation</li><li>Port-to-door</li></ul>
+          <p>FCL, LCL, and specialised cargo movements, with structured carrier selection and routing for cost and reliability.</p>
         </div>
       </article>
 
       <article class="svc__card" data-svc="customs">
-        <div class="svc__media"><canvas class="plate__cv" data-plate="customs" width="720" height="540"></canvas></div>
+        <div class="svc__media"><canvas class="plate__cv" data-plate="customs" width="720" height="540" aria-hidden="true"></canvas></div>
         <div class="svc__meta">
           <span class="svc__no">03</span>
           <h3>Customs Brokerage</h3>
-          <p>Licensed brokers filing in-house, so classification, valuation and
-          duty sit with the same team that moved the box.</p>
-          <ul><li>Import and export entry</li><li>Tariff classification</li><li>Duty and concession advice</li><li>Audit support</li></ul>
+          <p>In-house licensed brokerage covering classification, compliance, and quarantine — full control, no outsourcing.</p>
         </div>
       </article>
 
       <article class="svc__card" data-svc="warehouse">
-        <div class="svc__media"><canvas class="plate__cv" data-plate="warehouse" width="720" height="540"></canvas></div>
+        <div class="svc__media"><canvas class="plate__cv" data-plate="warehouse" width="720" height="540" aria-hidden="true"></canvas></div>
         <div class="svc__meta">
           <span class="svc__no">04</span>
-          <h3>Warehousing &amp; 3PL</h3>
-          <p>Bonded and general storage with pick, pack and inventory visibility
-          that reconciles against the shipment record, not a separate system.</p>
-          <ul><li>Bonded storage</li><li>Pick and pack</li><li>Inventory sync</li><li>Returns handling</li></ul>
+          <h3>Warehousing and 3PL</h3>
+          <p>Scalable storage, pick and pack, and distribution — fully integrated with freight and transport operations.</p>
         </div>
       </article>
 
       <article class="svc__card" data-svc="project">
-        <div class="svc__media"><canvas class="plate__cv" data-plate="project" width="720" height="540"></canvas></div>
+        <div class="svc__media"><canvas class="plate__cv" data-plate="project" width="720" height="540" aria-hidden="true"></canvas></div>
         <div class="svc__meta">
           <span class="svc__no">05</span>
           <h3>Project Cargo</h3>
-          <p>Out-of-gauge and heavy-lift moves surveyed, routed and permitted as
-          one engineered scope from factory floor to foundation.</p>
-          <ul><li>Route surveys</li><li>Heavy lift and OOG</li><li>Permits and escorts</li><li>Site delivery</li></ul>
+          <p>Specialist handling for oversized and complex shipments — from permits to engineered load configurations.</p>
         </div>
       </article>
 
-      <article class="svc__card" data-svc="land">
-        <div class="svc__media"><canvas class="plate__cv" data-plate="land" width="720" height="540"></canvas></div>
+      <article class="svc__card" data-svc="transport">
+        <div class="svc__media"><canvas class="plate__cv" data-plate="land" width="720" height="540" aria-hidden="true"></canvas></div>
         <div class="svc__meta">
           <span class="svc__no">06</span>
-          <h3>Domestic &amp; Linehaul Transport</h3>
-          <p>Wharf cartage, linehaul and final mile run on our own booking rails,
-          so the last leg reports like every leg before it.</p>
-          <ul><li>Wharf cartage</li><li>Interstate linehaul</li><li>Final mile</li><li>Sidelifter and tilt tray</li></ul>
+          <h3>Domestic &amp; Interstate Transport</h3>
+          <p>Local, metro, and interstate transport managed for consistent service levels and full delivery visibility.</p>
         </div>
       </article>
     </div>
     <div class="svc__progress"><i id="svcProgress"></i></div>
+  </div>
+  <div class="wrap">
+    <div class="reliability-grid" aria-label="Service reliability benefits">
+      <article class="reliability-card" data-reveal>
+        <h3>Real-Time Freight Tracking</h3>
+        <p>Know exactly where your cargo is at every milestone. Live visibility means faster decisions and zero guesswork.</p>
+      </article>
+      <article class="reliability-card" data-reveal>
+        <h3>Global Network overage</h3>
+        <p>From APAC lanes to international corridors, our partner network spans every major trade route your business relies on.</p>
+      </article>
+      <article class="reliability-card" data-reveal>
+        <h3>24/7 Customer Support</h3>
+        <p>Real people, always available. Whether it is a routine update or an urgent issue, we pick up the phone and we own the outcome.</p>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -263,7 +270,7 @@
 <section class="sec sec--why" id="why">
   <div class="wrap">
     <header class="sec__head sec__head--wide" data-reveal>
-      <p class="eyebrow">Why Meridian</p>
+      <p class="eyebrow">Why United Carriers</p>
       <h2 class="sec__title">Logistics that works as hard as you do.</h2>
     </header>
 
@@ -271,26 +278,27 @@
       <article class="why__item" data-reveal>
         <span class="why__no">01</span>
         <h3>One Point of Contact</h3>
-        <p>A named coordinator owns the file end to end. Same person for the
-        booking, the exception and the invoice query.</p>
+        <p>No more chasing multiple vendors. One team manages your entire shipment from origin to destination.</p>
       </article>
       <article class="why__item" data-reveal>
         <span class="why__no">02</span>
         <h3>Full Supply Chain Visibility</h3>
-        <p>Milestone events land against the shipment as they happen, so the
-        status you read is the status that exists.</p>
+        <p>Track your freight in real time and get proactive updates before issues become delays.</p>
       </article>
       <article class="why__item" data-reveal>
         <span class="why__no">03</span>
         <h3>Compliance You Can Trust</h3>
-        <p>In-house licensed brokers, documented processes and a clean audit
-        trail on every entry we lodge.</p>
+        <p>Our licensed customs brokers keep your shipments moving within every regulatory requirement across APAC.</p>
       </article>
       <article class="why__item" data-reveal>
         <span class="why__no">04</span>
         <h3>Competitive, Transparent Pricing</h3>
-        <p>Rates quoted line by line. What was quoted is what gets invoiced,
-        and any variation is explained before it is charged.</p>
+        <p>No hidden fees. Clear, competitive pricing backed by responsive sales support throughout the shipment.</p>
+      </article>
+      <article class="why__item" data-reveal>
+        <span class="why__no">05</span>
+        <h3>Fast Issue Resolution</h3>
+        <p>When something unexpected happens, we do not point fingers — we solve it. Our team acts immediately to protect your timeline.</p>
       </article>
     </div>
   </div>
@@ -307,24 +315,16 @@
     <div class="testi" id="testi">
       <div class="testi__track" id="testiTrack">
         <figure class="testi__card">
-          <blockquote>They took over a lane three other forwarders had already
-          given up on, and had it running clean inside a month.</blockquote>
-          <figcaption><b>Operations Director</b><span>Industrial equipment importer</span></figcaption>
+          <blockquote>My business wouldn't function without this team. Extremely talented with immense experience tailoring each consignment based on its merits. We have our dedicated account managers that know our business, are responsive and provide personalised serviced which we never had with bigger companies.<br><br>UC for the win.</blockquote>
+          <figcaption><b>Thomas Munro</b><span>Director, Picha Group</span></figcaption>
         </figure>
         <figure class="testi__card">
-          <blockquote>The difference is the handoffs — there aren't any. One team
-          answers whether it's a booking, a customs query or an invoice.</blockquote>
-          <figcaption><b>Supply Chain Manager</b><span>FMCG distributor</span></figcaption>
+          <blockquote>As a first time supplier shipping equipment to support one of the major Australian infrastructure project I came up against uncharted territories. It was a three months discovery and mobilization period until the first shipment left its origin airborne for Melbourne. Looking back I really appreciate Chris effort in helping a potential customer to understand what are required and how to go about the execution.</blockquote>
+          <figcaption><b>Francis Fung</b><span>APAC Supply Chain Operations Director, Commscope</span></figcaption>
         </figure>
         <figure class="testi__card">
-          <blockquote>We stopped chasing status updates. The milestones just
-          arrive, and they're accurate.</blockquote>
-          <figcaption><b>Head of Procurement</b><span>Renewables developer</span></figcaption>
-        </figure>
-        <figure class="testi__card">
-          <blockquote>Their brokers caught a classification error that had been
-          quietly costing us duty for two years.</blockquote>
-          <figcaption><b>Finance Controller</b><span>Automotive parts group</span></figcaption>
+          <blockquote>I worked closely with Chris over several years to build a seamless, cost effective supply chain for one of Australia's s largest fashion retail companies. Chris' knowledge and passion for the industry was apparent from day one.</blockquote>
+          <figcaption><b>Alex Hughes</b><span>Senior Management, Factory X</span></figcaption>
         </figure>
       </div>
       <div class="testi__nav">
@@ -339,8 +339,8 @@
 <section class="sec sec--partners" id="partners">
   <div class="wrap">
     <header class="sec__head" data-reveal>
-      <p class="eyebrow">Network</p>
-      <h2 class="sec__title">Carriers, terminals and agents we work through</h2>
+      <p class="eyebrow">Our partners</p>
+      <h2 class="sec__title">Connected by the carriers and specialists that keep freight moving.</h2>
     </header>
   </div>
   <div class="marquee" id="marqueeA"><div class="marquee__track"></div></div>
@@ -355,32 +355,44 @@
         <p class="eyebrow">Insights</p>
         <h2 class="sec__title">What&rsquo;s moving in your industry</h2>
       </div>
-      <a class="btn btn--ghost-ink" href="#"><span class="btn__label roll"><i>All insights</i><i aria-hidden="true">All insights</i></span></a>
+      <a class="btn btn--ghost-ink" href="#" data-study-link><span class="btn__label roll"><i>View all</i><i aria-hidden="true">View all</i></span></a>
     </header>
 
     <div class="ins__grid">
-      <a class="ins__card" href="#" data-reveal>
-        <div class="ins__media"><canvas class="plate__cv" data-plate="containers" width="640" height="420"></canvas></div>
-        <p class="ins__tag">Case study</p>
-        <h3>Reduced import delays and storage cost across 700+ containers</h3>
+      <a class="ins__card" href="#" data-study-link data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="containers" width="640" height="420" aria-hidden="true"></canvas></div>
+        <p class="ins__tag">Case Studies · July 8, 2026</p>
+        <h3>Reduced Import Delays &amp; Storage Costs Across 700+ Containers</h3>
         <span class="ins__more">Read</span>
       </a>
-      <a class="ins__card" href="#" data-reveal>
-        <div class="ins__media"><canvas class="plate__cv" data-plate="bunker" width="640" height="420"></canvas></div>
-        <p class="ins__tag">Market</p>
-        <h3>Fleet-wide fuel efficiency agreement signals focus on shipping performance</h3>
+      <a class="ins__card" href="#" data-study-link data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="bunker" width="640" height="420" aria-hidden="true"></canvas></div>
+        <p class="ins__tag">Asia Pacific · July 8, 2026</p>
+        <h3>Major Fleet-Wide Fuel Efficiency Agreement Signals Ongoing Focus on Shipping Performance and Decarbonisation</h3>
         <span class="ins__more">Read</span>
       </a>
-      <a class="ins__card" href="#" data-reveal>
-        <div class="ins__media"><canvas class="plate__cv" data-plate="truck" width="640" height="420"></canvas></div>
-        <p class="ins__tag">Case study</p>
-        <h3>Cost-optimised, speed-to-market import program for a new truck launch</h3>
+      <a class="ins__card" href="#" data-study-link data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="truck" width="640" height="420" aria-hidden="true"></canvas></div>
+        <p class="ins__tag">Case Studies · July 10, 2026</p>
+        <h3>Cost-Optimised and Speed to market Import Program for New Truck Launch in Australia</h3>
         <span class="ins__more">Read</span>
       </a>
-      <a class="ins__card" href="#" data-reveal>
-        <div class="ins__media"><canvas class="plate__cv" data-plate="battery" width="640" height="420"></canvas></div>
-        <p class="ins__tag">Project cargo</p>
-        <h3>Grid-scale battery project delivered for renewable energy infrastructure</h3>
+      <a class="ins__card" href="#" data-study-link data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="battery" width="640" height="420" aria-hidden="true"></canvas></div>
+        <p class="ins__tag">Case Studies · July 10, 2026</p>
+        <h3>Grid-Scale Battery Project Logistics Delivery for Renewable Energy Infrastructure</h3>
+        <span class="ins__more">Read</span>
+      </a>
+      <a class="ins__card" href="#" data-study-link data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="project" width="640" height="420" aria-hidden="true"></canvas></div>
+        <p class="ins__tag">Case Studies · July 10, 2026</p>
+        <h3>Time-Critical Oversized Sewer Tank Delivery to Residential Estate Development</h3>
+        <span class="ins__more">Read</span>
+      </a>
+      <a class="ins__card" href="#" data-study-link data-reveal>
+        <div class="ins__media"><canvas class="plate__cv" data-plate="ocean" width="640" height="420" aria-hidden="true"></canvas></div>
+        <p class="ins__tag">Global · July 13, 2026</p>
+        <h3>Global shipping rates soar as retailers race to beat looming tariffs</h3>
         <span class="ins__more">Read</span>
       </a>
     </div>
@@ -395,40 +407,37 @@
     </header>
 
     <div class="faq" id="faq-list">
-      <details class="faq__row" open>
-        <summary><span>What does Meridian Carriers do?</span><i></i></summary>
-        <div class="faq__body"><p>We are a freight forwarder and licensed customs
-        broker. We arrange air, ocean and overland movement, clear the goods, and
-        hold the warehousing and final-mile legs on the same file.</p></div>
+      <details class="faq__row">
+        <summary><span>What does United Carriers do?</span><i></i></summary>
+        <div class="faq__body"><p>United Carriers is a global freight forwarding and logistics provider delivering end-to-end supply chain solutions, including airfreight, seafreight, customs brokerage, warehousing, and transport.</p></div>
       </details>
       <details class="faq__row">
         <summary><span>What industries do you specialise in?</span><i></i></summary>
-        <div class="faq__body"><p>Industrial equipment, automotive parts, FMCG,
-        renewables and project infrastructure. Those lanes carry the compliance
-        and out-of-gauge work our brokerage and project teams are built around.</p></div>
+        <div class="faq__body"><p>We support a broad range of industries including retail, fashion, food &amp; beverage, industrial, project cargo, and technology.</p></div>
       </details>
       <details class="faq__row">
         <summary><span>What shipping methods do you offer?</span><i></i></summary>
-        <div class="faq__body"><p>Air consolidation and charter, ocean FCL, LCL,
-        breakbulk and RoRo, plus domestic linehaul, wharf cartage and final mile.</p></div>
+        <div class="faq__body"><p>We offer airfreight, seafreight (FCL &amp; LCL), breakbulk, RO/RO, and multimodal transport solutions.</p></div>
       </details>
       <details class="faq__row">
         <summary><span>Do you provide customs clearance services?</span><i></i></summary>
-        <div class="faq__body"><p>Yes — in-house, with licensed brokers. Entry
-        lodgement, classification, valuation, duty concessions and audit support
-        sit with the same team handling the shipment.</p></div>
+        <div class="faq__body"><p>Yes, we offer in-house customs brokerage to manage import and export clearances efficiently.</p></div>
       </details>
       <details class="faq__row">
-        <summary><span>Can you handle oversized or project cargo?</span><i></i></summary>
-        <div class="faq__body"><p>Yes. Out-of-gauge and heavy-lift moves are
-        surveyed, routed and permitted as a single engineered scope, including
-        lift plans and site delivery.</p></div>
+        <summary><span>How is freight pricing calculated?</span><i></i></summary>
+        <div class="faq__body"><p>Pricing depends on factors such as shipment size, weight, origin, destination, mode of transport, and current market conditions.</p></div>
       </details>
       <details class="faq__row">
-        <summary><span>How do I get a quote?</span><i></i></summary>
-        <div class="faq__body"><p>Send the lane, commodity, volume and target
-        dates. You will get a line-by-line rate rather than a single blended
-        number, so every charge is visible before you commit.</p></div>
+        <summary><span>Do you offer warehousing and 3PL services?</span><i></i></summary>
+        <div class="faq__body"><p>Yes, we provide storage, pick and pack, inventory management, and distribution solutions.</p></div>
+      </details>
+      <details class="faq__row">
+        <summary><span>Can you handle oversized or heavy cargo?</span><i></i></summary>
+        <div class="faq__body"><p>Yes, we specialise in project cargo including out-of-gauge (OOG) and heavy lift shipments.</p></div>
+      </details>
+      <details class="faq__row">
+        <summary><span>How do I request a quote?</span><i></i></summary>
+        <div class="faq__body"><p>You can contact us via our website, email, or phone with your shipment details.</p></div>
       </details>
     </div>
   </div>
@@ -436,13 +445,12 @@
 
 <!-- ══════════════════════════════  CTA  ══════════════════════════════ -->
 <section class="sec sec--cta" id="cta">
-  <canvas class="cta__cv" id="ctaCanvas"></canvas>
+  <canvas class="cta__cv" id="ctaCanvas" aria-hidden="true"></canvas>
   <div class="wrap">
     <h2 class="cta__title" data-reveal>Ready to move smarter?</h2>
-    <p class="cta__sub" data-reveal>Tell us the lane. We will tell you exactly what it costs and exactly when it lands.</p>
+    <p class="cta__sub" data-reveal>We are here to help you grow without hassle. No call centres. No runaround. Just experienced people ready to help.</p>
     <div class="cta__actions" data-reveal>
-      <a class="btn btn--solid" href="#"><span class="btn__label roll"><i>Talk with us</i><i aria-hidden="true">Talk with us</i></span></a>
-      <a class="btn btn--ghost" href="#"><span class="btn__label roll"><i>Our services</i><i aria-hidden="true">Our services</i></span></a>
+      <a class="btn btn--solid" href="#" data-study-link><span class="btn__label roll"><i>work with us</i><i aria-hidden="true">work with us</i></span></a>
     </div>
   </div>
 </section>
@@ -452,41 +460,41 @@
   <div class="wrap">
     <div class="foot__top">
       <div class="foot__brand">
-        <a class="foot__logo" href="#"><span>MERIDIAN</span><em>CARRIERS</em></a>
-        <p>Freight forwarding, customs brokerage and contract logistics across
-        the Asia&ndash;Pacific.</p>
-        <div class="foot__lanes"><canvas id="footCanvas" width="900" height="180"></canvas></div>
+        <a class="foot__logo" href="#" data-study-link><span>UNITED</span><em>CARRIERS</em></a>
+        <p>One operator.<br>Every leg of the journey.</p>
+        <div class="foot__lanes"><canvas id="footCanvas" width="900" height="180" aria-hidden="true"></canvas></div>
       </div>
 
       <nav class="foot__cols" aria-label="Footer">
         <div class="foot__col">
           <h4>Services</h4>
-          <a href="#">Air Freight</a><a href="#">Ocean Freight</a>
-          <a href="#">Customs Brokerage</a><a href="#">Warehousing &amp; 3PL</a>
-          <a href="#">Project Cargo</a><a href="#">Domestic Transport</a>
+          <a href="#" data-study-link>Air Freight</a><a href="#" data-study-link>Ocean Freight</a>
+          <a href="#" data-study-link>Customs Brokerage</a><a href="#" data-study-link>Warehousing &amp; 3PL</a>
+          <a href="#" data-study-link>Project Cargo</a><a href="#" data-study-link>Domestic &amp; Linehaul Transport</a>
         </div>
         <div class="foot__col">
           <h4>Company</h4>
-          <a href="#">About</a><a href="#">Industries</a><a href="#">Insights</a>
-          <a href="#">Careers</a><a href="#">Contact</a><a href="#">Community</a>
+          <a href="#" data-study-link>Home</a><a href="#" data-study-link>Insights</a><a href="#" data-study-link>Industries</a>
+          <a href="#" data-study-link>About us</a><a href="#" data-study-link>Merchandise</a><a href="#" data-study-link>Services</a>
+          <a href="#" data-study-link>Careers</a><a href="#" data-study-link>Community</a><a href="#" data-study-link>Contact us</a>
         </div>
         <div class="foot__col">
           <h4>Tools</h4>
-          <a href="#">Live Tracking Portal</a><a href="#">Carbon Calculator</a>
-          <a href="#">Rate Request</a><a href="#">Customs Guides</a>
+          <a href="#" data-study-link>Live Tracking Portal</a><a href="#" data-study-link>Carbon Calculator</a>
+          <a href="#" data-study-link>Freight Consolidation Programs</a><a href="#" data-study-link>Trade Compliance Advisory</a>
         </div>
         <div class="foot__col">
-          <h4>Offices</h4>
-          <a href="#">Singapore</a><a href="#">Sydney</a><a href="#">Auckland</a>
-          <a href="#">Hong Kong</a><a href="#">Shanghai</a><a href="#">Hamburg</a>
+          <h4>Head Offfice</h4>
+          <p>2A International Square,<br>Tullamarine VIC 3043, Australia.</p>
+          <a href="#" data-study-link>Direction on Google</a>
         </div>
       </nav>
     </div>
 
     <div class="foot__bar">
-      <p>&copy; 2026 Meridian Carriers. Fan-made rebuild study — a fictional company.</p>
+      <p>&copy; 2026 United Carriers APAC Pty Ltd. Crafted by Bearplus</p>
       <div class="foot__legal">
-        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Trading Conditions</a>
+        <a href="#" data-study-link>QHSE</a><a href="#" data-study-link>Privacy Policy</a><a href="#" data-study-link>TERMS &amp; CONDITIONS</a><a href="#" data-study-link>Payment Policy</a><a href="#" data-study-link>Delivery Policy</a><a href="#" data-study-link>Refund &amp; Returns Policy</a>
       </div>
     </div>
   </div>

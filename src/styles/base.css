@@ -1,0 +1,20 @@
+html { scroll-behavior: smooth; }
+
+body { min-width: 320px; }
+
+a[data-study-link] { cursor: pointer; }
+
+:where(a, button, summary):focus-visible {
+  outline: 2px solid var(--home-focus);
+  outline-offset: 4px;
+}
+
+canvas[aria-hidden="true"] { pointer-events: none; }
+
+.home-section__intro {
+  max-width: 52rem;
+  margin: var(--home-stack-md) 0 0;
+  color: var(--ink-62, var(--home-muted));
+  font-size: 1.5rem;
+  line-height: 1.5;
+}

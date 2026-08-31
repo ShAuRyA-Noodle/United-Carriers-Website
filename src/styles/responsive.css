@@ -1,0 +1,25 @@
+@media (max-width: 900px) {
+  .reliability-grid { grid-template-columns: 1fr; }
+
+  .reliability-card {
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+  }
+
+  .reliability-card:last-child { border-bottom: 0; }
+
+  .sec--why .why__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .sec--why .why__item:last-child { grid-column: auto; }
+}
+
+@media (max-width: 600px) {
+  .home-section__intro { font-size: 1.3rem; }
+
+  .sec--why .why__grid { grid-template-columns: 1fr; }
+
+  .reliability-card h3 { max-width: 16ch; }
+
+  .foot__legal { gap: 0.8rem 1.2rem; }
+}
