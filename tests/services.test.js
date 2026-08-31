@@ -22,23 +22,16 @@ function serviceMarkup() {
 }
 
 describe('initServices', () => {
-  it('uses the audited service imagery and exposes a mobile accordion control', () => {
+  it('uses the audited service icons without inventing photographic cards', () => {
     document.body.innerHTML = serviceMarkup();
     vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true }));
 
     const services = initServices({ root: document });
     const card = document.querySelector('[data-svc="air"]');
-    const toggle = card.querySelector('.service-toggle');
-
-    expect(card.querySelector('.service-card__art').getAttribute('src')).toBe(ASSETS['air-freight']);
+    expect(card.querySelector('.service-icon').getAttribute('src')).toBe(ASSETS['air-freight']);
     expect(document.querySelector('.service-route-vehicle').getAttribute('src')).toBe(ASSETS['26b6ae8acf0aa553efea60b4e1e392fd-truck-top-view']);
-    expect(toggle.getAttribute('aria-expanded')).toBe('true');
-    expect(card.dataset.serviceActive).toBe('true');
-
-    toggle.click();
-
-    expect(toggle.getAttribute('aria-expanded')).toBe('false');
-    expect(card.dataset.serviceActive).toBe('false');
+    expect(card.querySelector('canvas').hasAttribute('hidden')).toBe(true);
+    expect(card.querySelector('.service-toggle')).toBeNull();
     services.destroy();
   });
 });

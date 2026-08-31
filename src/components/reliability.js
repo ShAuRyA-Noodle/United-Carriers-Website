@@ -1,78 +1,81 @@
 import { ASSETS } from '../data/assets.js';
 
-function createScene() {
-  const scene = document.createElement('div');
-  scene.className = 'reliability-scene';
-  scene.setAttribute('aria-hidden', 'true');
-  scene.innerHTML = `
-    <img class="reliability-ocean" src="${ASSETS['a44825c5ffe02b6cfe7c994f6b-ocean-1']}" alt="">
-    <video class="reliability-wave" muted loop playsinline preload="metadata" poster="${ASSETS['6a44eec1ed1af2c4c403df6b-6a460d6f92801e715322d1d6-sea-wave-2-1-poster-0000000']}">
-      <source src="${ASSETS['6a44eec1ed1af2c4c403df6b-6a460d6f92801e715322d1d6-sea-wave-2-1-webm']}" type="video/webm">
-      <source src="${ASSETS['6a44eec1ed1af2c4c403df6b-6a460d6f92801e715322d1d6-sea-wave-2-1-mp4']}" type="video/mp4">
-    </video>
-    <img class="reliability-ship reliability-ship--desktop" src="${ASSETS['home-ship']}" alt="">
-    <img class="reliability-ship reliability-ship--mobile" src="${ASSETS['5fe1ad5b1eb8976490145b07d37337c5-home-ship-mb']}" alt="">
-    <img class="reliability-ship-tail reliability-ship-tail--desktop" src="${ASSETS['home-ship-bot']}" alt="">
-    <img class="reliability-ship-tail reliability-ship-tail--mobile" src="${ASSETS['99edc7aee5651267960c63b2edc940d5-home-ship-bot-mb']}" alt="">
-    <img class="reliability-cloud reliability-cloud--left" src="${ASSETS['cloud-left']}" alt="">
-    <img class="reliability-cloud reliability-cloud--right" src="${ASSETS['cloud-right']}" alt="">
-    <img class="reliability-cloud reliability-cloud--bottom" src="${ASSETS['cloud-bottom']}" alt="">
+function makeRoad() {
+  const road = document.createElement('div');
+  road.className = 'reliability-road';
+  road.setAttribute('aria-hidden', 'true');
+  road.innerHTML = `
+    <span class="reliability-road__line"></span>
+    <img class="reliability-road__truck" src="${ASSETS['26b6ae8acf0aa553efea60b4e1e392fd-truck-top-view']}" alt="">
   `;
+  return road;
+}
+
+function makeVoyage() {
+  const scene = document.createElement('section');
+  scene.className = 'ocean-voyage';
+  scene.setAttribute('aria-label', 'Ocean freight voyage');
+  scene.innerHTML = `
+    <div class="ocean-voyage__sticky" aria-hidden="true">
+      <img class="reliability-ocean" src="${ASSETS['a44825c5ffe02b6cfe7c994f6b46794b-ocean-1']}" alt="">
+      <video class="reliability-wave" muted loop playsinline preload="metadata" poster="${ASSETS['6a44eec1ed1af2c4c403df6b-6a460d6f92801e715322d1d6-sea-wave-2-1-poster-0000000']}">
+        <source src="${ASSETS['6a44eec1ed1af2c4c403df6b-6a460d6f92801e715322d1d6-sea-wave-2-1-webm']}" type="video/webm">
+        <source src="${ASSETS['6a44eec1ed1af2c4c403df6b-6a460d6f92801e715322d1d6-sea-wave-2-1-mp4']}" type="video/mp4">
+      </video>
+      <div class="ocean-voyage__ship">
+        <img class="reliability-ship" src="${ASSETS['home-ship']}" alt="">
+        <img class="reliability-ship-tail" src="${ASSETS['home-ship-bot']}" alt="">
+      </div>
+      <div class="ocean-voyage__why">
+        <span>Why us</span>
+        <strong>Logistics<br>that works<br>as hard as<br>you do.</strong>
+      </div>
+      <img class="reliability-cloud reliability-cloud--left" src="${ASSETS['cloud-left']}" alt="">
+      <img class="reliability-cloud reliability-cloud--right" src="${ASSETS['cloud-right']}" alt="">
+    </div>`;
   return scene;
 }
 
-/**
- * Adds the source ocean scene behind the three reliability milestones. The
- * desktop stage follows scroll progress; reduced motion renders the complete,
- * unpinned final composition.
- */
 export function initReliability({ root = document, reducedMotion = false } = {}) {
   const grid = root.querySelector('.reliability-grid');
-  const cards = grid ? [...grid.querySelectorAll('.reliability-card')] : [];
-  if (!grid || cards.length === 0) return { destroy() {} };
+  const cards = [...(grid?.querySelectorAll('.reliability-card') ?? [])];
+  if (!grid || !cards.length) return { destroy() {} };
 
-  const scene = grid.querySelector('.reliability-scene') || createScene();
-  if (!scene.isConnected) grid.insertBefore(scene, cards[0]);
+  const road = makeRoad();
+  grid.insertBefore(road, cards[0]);
+  const voyage = makeVoyage();
+  const reliabilityWrap = grid.parentElement;
+  reliabilityWrap.after(voyage);
   grid.classList.add('reliability-module--enhanced');
-  grid.classList.toggle('reliability-module--reduced', reducedMotion);
   cards.forEach((card, index) => { card.dataset.reliabilityMilestone = String(index + 1); });
 
   let frame = 0;
-  let observer;
-  const video = scene.querySelector('video');
-  const setStage = (stage) => {
-    const final = stage === 'final';
-    const index = final ? cards.length - 1 : stage;
-    grid.dataset.reliabilityStage = final ? 'final' : String(index + 1);
-    cards.forEach((card, cardIndex) => {
-      card.dataset.reliabilityCurrent = String(final || cardIndex === index);
-    });
-  };
-
+  const video = voyage.querySelector('video');
   const update = () => {
     frame = 0;
-    const rect = grid.getBoundingClientRect();
-    const viewport = window.innerHeight || 1;
-    const progress = Math.max(0, Math.min(1, (viewport * 0.68 - rect.top) / Math.max(rect.height - viewport * 0.35, 1)));
-    grid.style.setProperty('--reliability-progress', String(progress));
-    setStage(Math.min(cards.length - 1, Math.floor(progress * cards.length)));
+    const roadRect = grid.getBoundingClientRect();
+    const voyageRect = voyage.getBoundingClientRect();
+    const view = window.innerHeight || 1;
+    const roadProgress = Math.max(0, Math.min(1, (view * 0.55 - roadRect.top) / Math.max(roadRect.height - view * 0.45, 1)));
+    const voyageProgress = Math.max(0, Math.min(1, -voyageRect.top / Math.max(voyageRect.height - view, 1)));
+    grid.style.setProperty('--reliability-progress', String(roadProgress.toFixed(4)));
+    voyage.style.setProperty('--voyage-progress', String(voyageProgress.toFixed(4)));
+    grid.dataset.reliabilityStage = roadProgress >= 0.98 ? 'final' : String(Math.min(3, Math.floor(roadProgress * 3) + 1));
   };
-  const schedule = () => {
-    if (!frame) frame = requestAnimationFrame(update);
-  };
+  const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
 
-  if (reducedMotion) setStage('final');
-  else {
-    setStage(0);
+  let observer;
+  if (reducedMotion) {
+    grid.dataset.reliabilityStage = 'final';
+    grid.style.setProperty('--reliability-progress', '1');
+    voyage.style.setProperty('--voyage-progress', '0.5');
+  } else {
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
     schedule();
-    if (video && 'IntersectionObserver' in window) {
-      observer = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) video.play().catch(() => {});
-        else if (!video.paused) video.pause();
-      }, { threshold: 0.05 });
-      observer.observe(grid);
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(([entry]) => entry.isIntersecting ? video.play().catch(() => {}) : video.pause(), { threshold: 0.05 });
+      observer.observe(voyage);
     }
   }
 
@@ -82,15 +85,13 @@ export function initReliability({ root = document, reducedMotion = false } = {})
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
       observer?.disconnect();
-      if (video && !video.paused) video.pause();
-      scene.remove();
-      grid.classList.remove('reliability-module--enhanced', 'reliability-module--reduced');
-      delete grid.dataset.reliabilityStage;
+      video.pause();
+      road.remove();
+      voyage.remove();
+      grid.classList.remove('reliability-module--enhanced');
       grid.style.removeProperty('--reliability-progress');
-      cards.forEach((card) => {
-        delete card.dataset.reliabilityMilestone;
-        delete card.dataset.reliabilityCurrent;
-      });
+      delete grid.dataset.reliabilityStage;
+      cards.forEach((card) => delete card.dataset.reliabilityMilestone);
     },
   };
 }

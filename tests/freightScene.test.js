@@ -27,10 +27,11 @@ describe('freight scene', () => {
     const controller = initFreightScene(root, { reducedMotion: true });
 
     expect(root.classList.contains('freight-scene--final')).toBe(true);
+    expect(root.querySelector('.freight-scene__caption')).toBeNull();
     expect(root.querySelector('[data-freight="crane-base"] img').getAttribute('src'))
       .toBe('/assets/source/freight/frame-df.avif');
-    expect(root.querySelector('[data-freight="truck-cab"]').style.opacity).toBe('1');
-    expect(root.querySelector('[data-freight="truck-full"]').style.opacity).toBe('0');
+    expect(root.querySelector('[data-freight="truck-cab"]').style.opacity).toBe('0');
+    expect(root.querySelector('[data-freight="truck-full"]').style.opacity).toBe('1');
     expect(() => controller.destroy()).not.toThrow();
   });
 
